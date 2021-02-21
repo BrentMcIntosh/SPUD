@@ -6,12 +6,12 @@
     </thead>
     <tbody>
         <tr>
-            <td>name</td>
+            <td>{{name}}</td>
             <td>
-                <button onclick="update('genreId|name|description');">Update</button>
+                <button onclick="update('{{genreId}}|{{name}}|{{description}}');">Update</button>
             </td>
             <td>
-                <button onclick="delete('genreId');">Delete</button>
+                <button onclick="remove('{{genreId}}|{{name}}|{{description}}');">Delete</button>
             </td>
         </tr>
     </tbody>
