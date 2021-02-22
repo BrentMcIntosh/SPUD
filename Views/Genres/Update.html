@@ -1,14 +1,14 @@
 ﻿<div>
 <label for="name">Genre</label>
-<input id="name" name="name" value="{{name}}" />
+<input id="name" value="{{name}}" />
 </div>
 
 <div>
 <label for="description">Description</label>
-<input id="description" name="description" value="{{description}}" />
+<input id="description" value="{{description}}" />
 </div>
 
 <div>
-<button onclick="save('{{genreId}}');">Save</button>
+<button onclick="save({{genreId}});">Save</button>
 <button onclick="replace('Genres');">Cancel</button>
 </div>
