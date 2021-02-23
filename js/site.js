@@ -1,5 +1,4 @@
 ﻿
-
 function replace(page) {
 
     var xhttp = new XMLHttpRequest();
@@ -123,3 +122,29 @@ function reallyDelete(genreId) {
     xhttp.open('DELETE', '/api/Genres/' + genreId, true);
     xhttp.send();
 }
+
+document.addEventListener('click', event => {
+
+    if (event.srcElement.nodeName === 'BUTTON') {
+
+        if (event.srcElement.innerText === 'GENRES' || event.srcElement.title === 'Cancel') {
+            replace('Genres');
+        }
+        else {
+            var data = event.srcElement.dataset;
+
+            if (event.srcElement.title === 'Create New Genre' || event.srcElement.title === 'Edit') {
+                update(data['genreid'], data['name'], data['description']);
+            }
+            else if (event.srcElement.title === 'Remove') {
+                remove(data['genreid'], data['name'], data['description']);
+            }
+            else if (event.srcElement.title === 'Save') {
+                save(data['genreid']);
+            }
+            else if (event.srcElement.title === 'Really Delete') {
+                reallyDelete(data['genreid']);
+            }
+        }
+    }
+});

@@ -2,7 +2,8 @@
 <html>
 <head>
     <title>Spud</title>
-    <script src="/js/site.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/css/site.css" />
 </head>
 
 <body>
@@ -10,34 +11,6 @@
         <button>Genres</button>
     </nav>
     <main></main>
-    <script>
-        document.addEventListener('click', event => {
-
-            if (event.srcElement.nodeName === 'BUTTON') {
-
-                if (event.srcElement.innerText === 'Genres' || event.srcElement.innerText === 'Cancel') {
-                    replace('Genres');
-                }
-                else {
-                    var data = event.srcElement.dataset;
-
-                    if (event.srcElement.innerText === 'Create' || event.srcElement.innerText === 'Update') {
-                        update(data['genreid'], data['name'], data['description']);
-                    }
-                    else if (event.srcElement.innerText === 'Delete') {
-                        remove(data['genreid'], data['name'], data['description']);
-                    }
-                    else if (event.srcElement.innerText === 'Save') {
-                        save(data['genreid']);
-                    }
-                    else if (event.srcElement.innerText === 'Really Delete') {
-                        reallyDelete(data['genreid']);
-                    }
-                }
-            }
-        });
-    </script>
+    <script src="/js/site.js"></script>
 </body>
-
-    
 </html>
