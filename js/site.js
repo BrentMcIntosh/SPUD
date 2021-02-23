@@ -19,9 +19,9 @@ function replace(page) {
 
                     var list = JSON.parse(this.responseText);
 
-                    var tbody = div.getElementsByTagName('tbody')[0];
+                    var table = div.getElementsByTagName('table')[0];
 
-                    var template = tbody.getElementsByTagName('tr')[0].innerHTML;
+                    var template = table.getElementsByTagName('tr')[1].innerHTML;
 
                     for (var i = 0; i < list.length; i++) {
 
@@ -30,17 +30,17 @@ function replace(page) {
                         var row = interpolate(template, item.genreId, item.name, item.description);
 
                         if (i === 0) {
-                            tbody.getElementsByTagName('tr')[0].innerHTML = row;
+                            table.getElementsByTagName('tr')[1].innerHTML = row;
                         } else {
                             var child = document.createElement('tr');
 
                             child.innerHTML = row;
 
-                            tbody.appendChild(child);
+                            table.appendChild(child);
                         }
                     }
 
-                    document.getElementById('main').innerHTML = div.innerHTML;
+                    document.getElementsByTagName('main')[0].innerHTML = div.innerHTML;
                 }
             };
 
@@ -53,23 +53,20 @@ function replace(page) {
     xhttp.send();
 }
 
-function update(list) {
-    simplePage('Update', list);
+function update(genreId, name, description) {
+    simplePage('Update', genreId, name, description);
 }
 
-function remove(list) {
-    simplePage('Delete', list);
+function remove(genreId, name, description) {
+    simplePage('Delete', genreId, name, description);
 }
 
-function simplePage(page, list) {
+function simplePage(page, genreId, name, description) {
     var xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-
-            var items = list.split('|');
-
-            document.getElementById('main').innerHTML = interpolate(this.responseText, items[0], items[1], items[2]);
+            document.getElementsByTagName('main')[0].innerHTML = interpolate(this.responseText, genreId, name, description);
         }
     };
 
@@ -102,7 +99,7 @@ function save(genreId) {
         }
     };
 
-    if (genreId === 0) {
+    if (genreId === '0') {
         xhttp.open('POST', '/api/Genres', true);
     }
     else {

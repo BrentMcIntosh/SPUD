@@ -1,19 +1,19 @@
-﻿<button onclick="update('0||');">Create</button>
+﻿<button data-genreId='0' data-name='' data-description=''>Create</button>
 <table>
-    <thead>
-        <tr>
-            <th>Genre</th><th>&nbsp;</th><th>&nbsp;</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>{{name}}</td>
-            <td>
-                <button onclick="update('{{genreId}}|{{name}}|{{description}}');">Update</button>
-            </td>
-            <td>
-                <button onclick="remove('{{genreId}}|{{name}}|{{description}}');">Delete</button>
-            </td>
-        </tr>
-    </tbody>
+    <tr>
+        <th>Genre</th>
+        <th>Description</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+    </tr>
+    <tr>
+        <td>{{name}}</td>
+        <td>{{description}}</td>
+        <td>
+            <button data-genreId='{{genreId}}' data-name='{{name}}' data-description='{{description}}'>Update</button>
+        </td>
+        <td>
+            <button data-genreId='{{genreId}}' data-name='{{name}}' data-description='{{description}}'>Delete</button>
+        </td>
+    </tr>
 </table>

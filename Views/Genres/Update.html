@@ -1,14 +1,8 @@
-﻿<div>
-<label for="name">Genre</label>
+﻿<label for="name">Genre</label>
 <input id="name" value="{{name}}" />
-</div>
 
-<div>
 <label for="description">Description</label>
-<input id="description" value="{{description}}" />
-</div>
+<textarea id="description">{{description}}</textarea>
 
-<div>
-<button onclick="save({{genreId}});">Save</button>
-<button onclick="replace('Genres');">Cancel</button>
-</div>
+<button data-genreId='{{genreId}}'>Save</button>
+<button>Cancel</button>

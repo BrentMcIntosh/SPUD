@@ -7,8 +7,37 @@
 
 <body>
     <nav>
-        <button onclick="replace('Genres');">Genres</button>
+        <button>Genres</button>
     </nav>
-    <main id="main"></main>
+    <main></main>
+    <script>
+        document.addEventListener('click', event => {
+
+            if (event.srcElement.nodeName === 'BUTTON') {
+
+                if (event.srcElement.innerText === 'Genres' || event.srcElement.innerText === 'Cancel') {
+                    replace('Genres');
+                }
+                else {
+                    var data = event.srcElement.dataset;
+
+                    if (event.srcElement.innerText === 'Create' || event.srcElement.innerText === 'Update') {
+                        update(data['genreid'], data['name'], data['description']);
+                    }
+                    else if (event.srcElement.innerText === 'Delete') {
+                        remove(data['genreid'], data['name'], data['description']);
+                    }
+                    else if (event.srcElement.innerText === 'Save') {
+                        save(data['genreid']);
+                    }
+                    else if (event.srcElement.innerText === 'Really Delete') {
+                        reallyDelete(data['genreid']);
+                    }
+                }
+            }
+        });
+    </script>
 </body>
+
+    
 </html>

@@ -1,11 +1,11 @@
 ﻿
-<div>Do you <em>really</em> want to delete this?</div>
+<h3>Do you really want to delete this?</h3>
 
 <label for="name">Genre</label>
-<div>{{name}}</div>
+<input id="name" value="{{name}}" disabled />
 
 <label for="description">Description</label>
-<div>{{description}}</div>
+<textarea id="description" disabled>{{description}}</textarea>
 
 <button onclick="reallyDelete('{{genreId}}');">Really Delete</button>
-<button onclick="replace('Genres');">Cancel</button>
+<button>Cancel</button>
