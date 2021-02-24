@@ -1,0 +1,17 @@
+﻿<button data-albumId='0' data-title='' data-price='' data-albumArtUrl='' title="Create New Album" class="album fas fa-plus"></button>
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Cover</th>
+    </tr>
+    <tr>
+        <td>{{title}}</td>
+        <td>{{price}}</td>
+        <td><img class="cover" src="{{albumArtUrl}}" /></td>
+        <td>
+            <button data-albumId='{{albumId}}' data-title='{{title}}' data-price='{{price}}' data-albumArtUrl='{{albumArtUrl}}' title="Edit" class="album fas fa-edit"></button>
+            <button data-albumId='{{albumId}}' data-title='{{title}}' data-price='{{price}}' title="Remove" class="album fas fa-trash"></button>
+        </td>
+    </tr>
+</table>
