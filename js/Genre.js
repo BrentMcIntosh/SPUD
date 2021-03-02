@@ -29,9 +29,9 @@ export class Genre {
 
                         let list = JSON.parse(this.responseText);
 
-                        let table = div.getElementsByTagName('table')[0];
+                        let template = div.getElementsByTagName('button')[1].outerHTML;
 
-                        let template = table.getElementsByTagName('tr')[1].innerHTML;
+                        div.getElementsByTagName('button')[1].remove();
 
                         for (let i = 0; i < list.length; i++) {
 
@@ -39,20 +39,12 @@ export class Genre {
 
                             let inner = new Genre();
 
-                            let row = inner.interpolate(template, item.genreId, item.name, item.description);
+                            let button = inner.interpolate(template, item.genreId, item.name, item.description);
 
-                            if (i === 0) {
-                                table.getElementsByTagName('tr')[1].innerHTML = row;
-                            } else {
-                                let child = document.createElement('tr');
-
-                                child.innerHTML = row;
-
-                                table.appendChild(child);
-                            }
+                            div.innerHTML += button;
                         }
 
-                        document.getElementsByTagName('main')[0].innerHTML = div.innerHTML;
+                        document.getElementById('main').innerHTML = div.innerHTML;
                     }
                 };
 
@@ -81,7 +73,21 @@ export class Genre {
 
                 let inner = new Genre();
 
-                document.getElementsByTagName('main')[0].innerHTML = inner.interpolate(this.responseText, genreId, name, description);
+                if (!genreId) {
+                    genreId = 0;
+                }
+
+                if (!name) name = '';
+                if (!description) description = '';
+
+                document.getElementById('main').style.display = "none";
+                document.getElementById('main').innerHTML = inner.interpolate(this.responseText, genreId, name, description);
+
+                if (genreId === 0) {
+                    document.getElementById('remove').style.display = "none";
+                }
+
+                document.getElementById('main').style.display = "block";
             }
         };
 
@@ -138,18 +144,18 @@ export class Genre {
 
     route(element) {
 
-        if (element.innerText === 'GENRES' || element.title === 'Cancel') {
+        if (element.innerText === 'GENRES' || element.id === 'cancel') {
             this.replace('Genres');
         } else {
             let data = element.dataset;
 
-            if (element.title === 'Create New Genre' || element.title === 'Edit') {
+            if (element.id === 'create' || event.srcElement.classList.contains('edit')) {
                 this.update(data['genreid'], data['name'], data['description']);
-            } else if (element.title === 'Remove') {
+            } else if (element.id === 'remove') {
                 this.remove(data['genreid'], data['name'], data['description']);
-            } else if (element.title === 'Save') {
+            } else if (element.id === 'save') {
                 this.save(data['genreid']);
-            } else if (element.title === 'Really Delete') {
+            } else if (element.id === 'reallyDelete') {
                 this.reallyDelete(data['genreid']);
             }
         }

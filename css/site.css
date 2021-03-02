@@ -1,9 +1,4 @@
 ﻿
-main {
-    margin: 10px;
-    padding: 10px;
-}
-
 td {
     font-size: 14px;
     vertical-align: middle;
@@ -16,19 +11,29 @@ td {
 }
 
 body {
-    display: flex;
-    align-items: stretch;
-    margin: 0;
     font-family: Helvetica, "Trebuchet MS", Verdana, sans-serif;
+    margin: 10px;
 }
 
-nav {
-    width: 200px;
-    min-height: calc(100vh - 2em);
+.coverImage {
+    border: 1px solid black;
+    display: inline;
+    height: 250px;
+    margin: 5px;
+    padding: 0;
+    transition: all 0.3s ease 0s;
+    width: 250px;
 }
 
-main {
-    flex: auto;
+.coverImage:hover {
+    width: 260px;
+    height: 260px;
+    transition: all 0.3s ease 0s;
+}
+
+.coverImage {
+    height: 250px;
+    width: 250px;
 }
 
 button {
@@ -41,6 +46,8 @@ button {
     display: block;
     transition: all 0.3s ease 0s;
     margin: 10px;
+    width: 98%;
+    font-size: 20px;
 }
 
 button:hover {
@@ -71,14 +78,5 @@ label {
     display: inline-block;
 }
 
-img.cover {
-    height: 64px;
-    width: 64px;
-}
-
-img.cover:hover {
-    height: 192px;
-    width: 192px;
-}
 
 

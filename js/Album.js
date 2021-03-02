@@ -38,9 +38,9 @@ export class Album {
 
                         let list = JSON.parse(this.responseText);
 
-                        let table = div.getElementsByTagName('table')[0];
+                        let template = div.getElementsByTagName('img')[0].outerHTML;
 
-                        let template = table.getElementsByTagName('tr')[1].innerHTML;
+                        div.getElementsByTagName('img')[0].remove();
 
                         for (let i = 0; i < list.length; i++) {
 
@@ -48,20 +48,12 @@ export class Album {
 
                             let inner = new Album();
 
-                            let row = inner.interpolate(template, item.albumId, item.title, item.price, item.albumArtUrl);
+                            let image = inner.interpolate(template, item.albumId, item.title, item.price, item.albumArtUrl);
 
-                            if (i === 0) {
-                                table.getElementsByTagName('tr')[1].innerHTML = row;
-                            } else {
-                                let child = document.createElement('tr');
-
-                                child.innerHTML = row;
-
-                                table.appendChild(child);
-                            }
+                            div.innerHTML += image;
                         }
 
-                        document.getElementsByTagName('main')[0].innerHTML = div.innerHTML;
+                        document.getElementById('main').innerHTML = div.innerHTML;
                     }
                 };
 
@@ -132,15 +124,15 @@ export class Album {
 
                         div.innerHTML = inner.interpolate(div.innerHTML, album.albumId, album.title, album.price > 0 ? album.price : "", album.albumArtUrl);
 
-                        document.getElementsByTagName('main')[0].style.display = "none";
+                        document.getElementById('main').style.display = "none";
 
-                        document.getElementsByTagName('main')[0].innerHTML = div.innerHTML;
+                        document.getElementById('main').innerHTML = div.innerHTML;
 
                         document.getElementById("artistId").innerHTML = inner.setSelect(album.artistId, artists, "artistId");
 
                         document.getElementById("genreId").innerHTML = inner.setSelect(album.genreId, genres, "genreId");
 
-                        document.getElementsByTagName('main')[0].style.display = "block";
+                        document.getElementById('main').style.display = "block";
                     }
                 };
 
@@ -165,7 +157,7 @@ export class Album {
 
                 let inner = new Album();
 
-                document.getElementsByTagName('main')[0].innerHTML = inner.interpolate(this.responseText, albumId, title, price, albumArtUrl);
+                document.getElementById('main').innerHTML = inner.interpolate(this.responseText, albumId, title, price, albumArtUrl);
             }
         };
 
@@ -226,12 +218,12 @@ export class Album {
 
     route(element) {
 
-        if (element.innerText === 'ALBUMS' || element.title === 'Cancel') {
+        if (element.id === 'listAlbums' || element.id === 'Cancel') {
             this.replace('Albums');
         } else {
             let data = element.dataset;
 
-            if (element.title === 'Create New Album' || element.title === 'Edit') {
+            if (element.id === 'create' || event.srcElement.classList.contains('edit')) {
                 this.update(data['albumid']);
             } else if (element.title === 'Remove') {
                 this.remove(data['albumid'], data['title'], data['price'], data['albumarturl']);

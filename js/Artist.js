@@ -28,9 +28,9 @@ export class Artist {
 
                         let list = JSON.parse(this.responseText);
 
-                        let table = div.getElementsByTagName('table')[0];
+                        let template = div.getElementsByTagName('button')[1].outerHTML;
 
-                        let template = table.getElementsByTagName('tr')[1].innerHTML;
+                        div.getElementsByTagName('button')[1].remove();
 
                         for (let i = 0; i < list.length; i++) {
 
@@ -38,20 +38,12 @@ export class Artist {
 
                             let inner = new Artist();
 
-                            let row = inner.interpolate(template, item.artistId, item.name);
+                            let button = inner.interpolate(template, item.artistId, item.name);
 
-                            if (i === 0) {
-                                table.getElementsByTagName('tr')[1].innerHTML = row;
-                            } else {
-                                let child = document.createElement('tr');
-
-                                child.innerHTML = row;
-
-                                table.appendChild(child);
-                            }
+                            div.innerHTML += button;
                         }
 
-                        document.getElementsByTagName('main')[0].innerHTML = div.innerHTML;
+                        document.getElementById('main').innerHTML = div.innerHTML;
                     }
                 };
 
@@ -80,7 +72,20 @@ export class Artist {
 
                 let inner = new Artist();
 
-                document.getElementsByTagName('main')[0].innerHTML = inner.interpolate(this.responseText, artistId, name);
+                if (!artistId) {
+                    artistId = 0;
+                }
+
+                if (!name) name = '';
+
+                document.getElementById('main').style.display = "none";
+                document.getElementById('main').innerHTML = inner.interpolate(this.responseText, artistId, name);
+
+                if (artistId === 0) {
+                    document.getElementById('remove').style.display = "none";
+                }
+
+                document.getElementById('main').style.display = "block";
             }
         };
 
@@ -136,18 +141,18 @@ export class Artist {
 
     route(element) {
 
-        if (element.innerText === 'ARTISTS' || element.title === 'Cancel') {
+        if (element.innerText === 'ARTISTS' || element.id === 'cancel') {
             this.replace('Artists');
         } else {
             let data = element.dataset;
 
-            if (element.title === 'Create New Artist' || element.title === 'Edit') {
+            if (element.id === 'create' || event.srcElement.classList.contains('edit')) {
                 this.update(data['artistid'], data['name']);
-            } else if (element.title === 'Remove') {
+            } else if (element.id === 'remove') {
                 this.remove(data['artistid'], data['name']);
-            } else if (element.title === 'Save') {
+            } else if (element.id === 'save') {
                 this.save(data['artistid']);
-            } else if (element.title === 'Really Delete') {
+            } else if (element.id === 'reallyDelete') {
                 this.reallyDelete(data['artistid']);
             }
         }

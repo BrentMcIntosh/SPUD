@@ -4,5 +4,6 @@
 <label for="description">Description</label>
 <textarea id="description">{{description}}</textarea>
 
-<button data-genreId='{{genreId}}' title="Save" class="genre fas fa-save"></button>
-<button title="Cancel" class="genre fas fa-window-close"></button>
+<button id="save" data-genreId='{{genreId}}' class="genre">Save</button>
+<button id="cancel" class="genre">Cancel</button>
+<button id="remove" data-genreId='{{genreId}}' data-name='{{name}}'data-description='{{description}}' class="genre">Remove Genre</button>

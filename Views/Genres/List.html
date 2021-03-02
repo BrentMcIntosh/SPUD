@@ -1,16 +1,2 @@
-﻿<button data-genreId='0' data-name='' data-description='' title="Create New Genre" class="genre fas fa-plus"></button>
-<table>
-    <tr>
-        <th>Genre</th>
-        <th>Description</th>
-        <th>&nbsp;</th>
-    </tr>
-    <tr>
-        <td>{{name}}</td>
-        <td>{{description}}</td>
-        <td>
-            <button data-genreId='{{genreId}}' data-name='{{name}}' data-description='{{description}}' title="Edit" class="genre fas fa-edit"></button>
-            <button data-genreId='{{genreId}}' data-name='{{name}}' data-description='{{description}}' title="Remove" class="genre fas fa-trash"></button>
-        </td>
-    </tr>
-</table>
+﻿<button id="create" class="genre">Add a Genre</button>
+<button class="genre edit" data-genreId='{{genreId}}' data-name='{{name}}' data-description='{{description}}'>{{name}}</button>
