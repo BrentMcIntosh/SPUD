@@ -38,9 +38,9 @@ export class Album {
 
                         let list = JSON.parse(this.responseText);
 
-                        let template = div.getElementsByTagName('img')[0].outerHTML;
+                        let template = div.getElementsByClassName("container")[0].outerHTML;
 
-                        div.getElementsByTagName('img')[0].remove();
+                        div.getElementsByClassName("container")[0].remove();
 
                         for (let i = 0; i < list.length; i++) {
 
@@ -102,6 +102,10 @@ export class Album {
 
         let xhttp = new XMLHttpRequest();
 
+        if (!albumId) {
+            albumId = 0;
+        }
+
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
 
@@ -131,6 +135,10 @@ export class Album {
                         document.getElementById("artistId").innerHTML = inner.setSelect(album.artistId, artists, "artistId");
 
                         document.getElementById("genreId").innerHTML = inner.setSelect(album.genreId, genres, "genreId");
+
+                        if (albumId === 0) {
+                            document.getElementById('remove').style.display = "none";
+                        }
 
                         document.getElementById('main').style.display = "block";
                     }
@@ -225,11 +233,11 @@ export class Album {
 
             if (element.id === 'create' || event.srcElement.classList.contains('edit')) {
                 this.update(data['albumid']);
-            } else if (element.title === 'Remove') {
+            } else if (element.id === 'remove') {
                 this.remove(data['albumid'], data['title'], data['price'], data['albumarturl']);
-            } else if (element.title === 'Save') {
+            } else if (element.id === 'save') {
                 this.save(data['albumid']);
-            } else if (element.title === 'Really Delete') {
+            } else if (element.id === 'reallyDelete') {
                 this.reallyDelete(data['albumid']);
             }
         }

@@ -1,4 +1,8 @@
 ﻿
+button, img {
+    cursor: pointer;
+}
+
 td {
     font-size: 14px;
     vertical-align: middle;
@@ -13,27 +17,6 @@ td {
 body {
     font-family: Helvetica, "Trebuchet MS", Verdana, sans-serif;
     margin: 10px;
-}
-
-.coverImage {
-    border: 1px solid black;
-    display: inline;
-    height: 250px;
-    margin: 5px;
-    padding: 0;
-    transition: all 0.3s ease 0s;
-    width: 250px;
-}
-
-.coverImage:hover {
-    width: 260px;
-    height: 260px;
-    transition: all 0.3s ease 0s;
-}
-
-.coverImage {
-    height: 250px;
-    width: 250px;
 }
 
 button {
@@ -78,5 +61,49 @@ label {
     display: inline-block;
 }
 
+.container {
+    display: inline;
+    position: relative;
+    
+}
 
+.image {
+    border: none;
+    display: inline;
+    height: 250px !important;
+    width: 250px !important;
+    margin: 0;
+    padding: 0;
+    transition: all 0.3s ease 0s;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    margin-top: -120px;
+}
+
+.container:hover .overlay {
+    opacity: 1;
+}
+
+.text {
+    color: yellow;
+    font-size: 30px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center;
+    cursor: pointer;
+}
 

@@ -6,7 +6,7 @@ import { Album } from '/js/Album.js';
 
 document.addEventListener('click', event => {
 
-    if (event.srcElement.nodeName === 'BUTTON' || event.srcElement.nodeName === 'IMG') {
+    if (event.srcElement.nodeName === 'BUTTON' || event.srcElement.nodeName === 'IMG' || event.srcElement.nodeName === 'DIV') {
 
         if (event.srcElement.classList.contains('genre')) {
             let item = new Genre();
