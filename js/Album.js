@@ -166,6 +166,10 @@ export class Album {
                 let inner = new Album();
 
                 document.getElementById('main').innerHTML = inner.interpolate(this.responseText, albumId, title, price, albumArtUrl);
+
+                if (albumId === 0) {
+                    document.getElementById('remove').style.display = "none";
+                }
             }
         };
 

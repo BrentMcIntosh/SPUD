@@ -16,7 +16,9 @@ td {
 
 body {
     font-family: Helvetica, "Trebuchet MS", Verdana, sans-serif;
-    margin: 10px;
+    display: flex;
+    align-items: stretch;
+    margin: 0;
 }
 
 button {
@@ -29,7 +31,7 @@ button {
     display: block;
     transition: all 0.3s ease 0s;
     margin: 10px;
-    width: 98%;
+    width: 50%;
     font-size: 20px;
 }
 
@@ -45,7 +47,7 @@ button:hover {
 }
 
 input, select, textarea {
-    width: 100%;
+    width: 800px;
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
@@ -70,8 +72,8 @@ label {
 .image {
     border: none;
     display: inline;
-    height: 250px !important;
-    width: 250px !important;
+    height: 200px !important;
+    width: 200px !important;
     margin: 0;
     padding: 0;
     transition: all 0.3s ease 0s;
@@ -95,7 +97,8 @@ label {
 }
 
 .text {
-    color: yellow;
+    color: #ddd;
+    background-color: #333;
     font-size: 30px;
     position: absolute;
     top: 50%;
@@ -105,5 +108,29 @@ label {
     transform: translate(-50%, -50%);
     text-align: center;
     cursor: pointer;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+nav {
+    width: 280px;
+    min-width: 280px;
+    margin: 10px;
+    padding: 10px;
+}
+
+main {
+    width: 1400px;
+    margin: 10px;
+    padding: 10px;
+}
+
+#create {
+    color: aqua;
+    background-color: blue;
+}
+
+#create:hover {
+    background-color: aqua;
 }
 

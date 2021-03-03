@@ -81,7 +81,7 @@ export class Artist {
                 document.getElementById('main').style.display = "none";
                 document.getElementById('main').innerHTML = inner.interpolate(this.responseText, artistId, name);
 
-                if (artistId === 0) {
+                if (artistId === "0") {
                     document.getElementById('remove').style.display = "none";
                 }
 
