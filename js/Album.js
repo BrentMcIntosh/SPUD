@@ -1,23 +1,8 @@
 ﻿'use strict';
 
+import { Interpolator } from '/js/Interpolator.js';
+
 export class Album {
-
-    interpolate(template, albumId, title, price, albumArtUrl, genreId, artistId) {
-        template = template.replace(/{{albumId}}/g, albumId);
-        template = template.replace(/{{title}}/g, title);
-        template = template.replace(/{{price}}/g, price);
-        template = template.replace(/{{albumArtUrl}}/g, albumArtUrl);
-
-        if (genreId) {
-            template = template.replace(/{{genreId}}/g, genreId);
-        }
-
-        if (artistId) {
-            template = template.replace(/{{artistId}}/g, artistId);
-        }
-
-        return template;
-    }
 
     replace(page) {
 
@@ -26,9 +11,7 @@ export class Album {
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
 
-                let div = document.createElement('div');
-
-                div.innerHTML = this.responseText;
+                let listHtml = this.responseText;
 
                 let jsonRequest = new XMLHttpRequest();
 
@@ -38,6 +21,10 @@ export class Album {
 
                         let list = JSON.parse(this.responseText);
 
+                        let div = document.createElement('div');
+
+                        div.innerHTML = listHtml;
+
                         let template = div.getElementsByClassName("container")[0].outerHTML;
 
                         div.getElementsByClassName("container")[0].remove();
@@ -46,11 +33,15 @@ export class Album {
 
                             let item = list[i];
 
-                            let inner = new Album();
+                            let albumDiv = document.createElement('div');
 
-                            let image = inner.interpolate(template, item.albumId, item.title, item.price, item.albumArtUrl);
+                            var interpol = new Interpolator();
 
-                            div.innerHTML += image;
+                            albumDiv.innerHTML = interpol.interpolate(template, item);
+
+                            albumDiv.getElementsByClassName("image")[0].src = item.albumArtUrl;
+
+                            div.innerHTML += albumDiv.innerHTML;
                         }
 
                         document.getElementById('main').innerHTML = div.innerHTML;
@@ -123,10 +114,10 @@ export class Album {
                         let album = albumEdit.album;
                         let artists = albumEdit.artists;
                         let genres = albumEdit.genres;
+                        let inner = new Album();
+                        let interpol = new Interpolator();
 
-                        var inner = new Album();
-
-                        div.innerHTML = inner.interpolate(div.innerHTML, album.albumId, album.title, album.price > 0 ? album.price : "", album.albumArtUrl);
+                        div.innerHTML = interpol.interpolate(div.innerHTML, album);
 
                         document.getElementById('main').style.display = "none";
 
@@ -163,9 +154,16 @@ export class Album {
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
 
-                let inner = new Album();
+                var interpol = new Interpolator();
 
-                document.getElementById('main').innerHTML = inner.interpolate(this.responseText, albumId, title, price, albumArtUrl);
+                var album = {
+                    albumId: albumId,
+                    title: title,
+                    price: price,
+                    albumArtUrl: albumArtUrl
+                };
+
+                document.getElementById('main').innerHTML = interpol.interpolate(this.responseText, album);
 
                 if (albumId === 0) {
                     document.getElementById('remove').style.display = "none";
@@ -181,16 +179,19 @@ export class Album {
 
         var xhttp = new XMLHttpRequest();
 
-        var data = '{ "albumId": {{albumId}}, "title": "{{title}}", "genreId": "{{genreId}}", "artistId": "{{artistId}}", "price": "{{price}}", "albumArtUrl": "{{albumArtUrl}}" }';
+        var album = {
+            albumId: albumId || 0,
+            title: "",
+            genreId: 0,
+            artistId: 0,
+            title: "",
+            price: 0,
+            albumArtUrl: ""
+        };
 
-        var title = document.getElementById("title").value;
-        var genreId = document.getElementById("genreId").value;
-        var artistId = document.getElementById("artistId").value;
-        var title = document.getElementById("title").value;
-        var price = document.getElementById("price").value;
-        var albumArtUrl = document.getElementById("albumArtUrl").value;
+        let interpol = new Interpolator();
 
-        data = this.interpolate(data, albumId, title, price, albumArtUrl, genreId, artistId);
+        let data = interpol.docToJson(album, document);
 
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4) {
@@ -201,10 +202,10 @@ export class Album {
             }
         };
 
-        if (albumId === '0') {
-            xhttp.open('POST', '/api/Albums', true);
-        } else {
+        if (albumId) {
             xhttp.open('PUT', '/api/Albums/' + albumId, true);
+        } else {
+            xhttp.open('POST', '/api/Albums', true);
         }
 
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");

@@ -1,14 +1,8 @@
 ﻿'use strict';
 
+import { Interpolator } from '/js/Interpolator.js';
+
 export class Genre {
-
-    interpolate(template, genreId, name, description) {
-        template = template.replace(/{{genreId}}/g, genreId);
-        template = template.replace(/{{name}}/g, name);
-        template = template.replace(/{{description}}/g, description);
-
-        return template;
-    }
 
     replace(page) {
 

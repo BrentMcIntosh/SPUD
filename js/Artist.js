@@ -1,13 +1,8 @@
 ﻿'use strict';
 
+import { Interpolator } from '/js/Interpolator.js';
+
 export class Artist {
-
-    interpolate(template, artistId, name) {
-        template = template.replace(/{{artistId}}/g, artistId);
-        template = template.replace(/{{name}}/g, name);
-
-        return template;
-    }
 
     replace(page) {
 
