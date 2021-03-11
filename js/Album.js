@@ -144,24 +144,17 @@ export class Album {
         xhttp.send();
     }
 
-    remove(albumId, title, price, albumArtUrl) {
-        this.simplePage('Delete', albumId, title, price, albumArtUrl);
+    remove(album) {
+        this.simplePage('Delete', album);
     }
 
-    simplePage(page, albumId, title, price, albumArtUrl) {
+    simplePage(page, album) {
         let xhttp = new XMLHttpRequest();
 
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
 
                 var interpol = new Interpolator();
-
-                var album = {
-                    albumId: albumId,
-                    title: title,
-                    price: price,
-                    albumArtUrl: albumArtUrl
-                };
 
                 document.getElementById('main').innerHTML = interpol.interpolate(this.responseText, album);
 
@@ -175,22 +168,10 @@ export class Album {
         xhttp.send();
     }
 
-    save(albumId) {
+    save(album) {
 
-        var xhttp = new XMLHttpRequest();
-
-        var album = {
-            albumId: albumId || 0,
-            title: "",
-            genreId: 0,
-            artistId: 0,
-            title: "",
-            price: 0,
-            albumArtUrl: ""
-        };
-
+        let xhttp = new XMLHttpRequest();
         let interpol = new Interpolator();
-
         let data = interpol.docToJson(album, document);
 
         xhttp.onreadystatechange = function () {
@@ -202,8 +183,8 @@ export class Album {
             }
         };
 
-        if (albumId) {
-            xhttp.open('PUT', '/api/Albums/' + albumId, true);
+        if (album.albumId) {
+            xhttp.open('PUT', '/api/Albums/' + album.albumId, true);
         } else {
             xhttp.open('POST', '/api/Albums', true);
         }
@@ -236,14 +217,28 @@ export class Album {
         } else {
             let data = element.dataset;
 
+            var album = {
+                albumId: 0,
+                title: "",
+                genreId: 0,
+                artistId: 0,
+                title: "",
+                price: 0,
+                albumArtUrl: ""
+            };
+
+            let interpol = new Interpolator();
+
+            album = interpol.dataToClass(album, data);
+
             if (element.id === 'create' || event.srcElement.classList.contains('edit')) {
-                this.update(data['albumid']);
+                this.update(album.albumId);
             } else if (element.id === 'remove') {
-                this.remove(data['albumid'], data['title'], data['price'], data['albumarturl']);
+                this.remove(album);
             } else if (element.id === 'save') {
-                this.save(data['albumid']);
+                this.save(album);
             } else if (element.id === 'reallyDelete') {
-                this.reallyDelete(data['albumid']);
+                this.reallyDelete(album.albumId);
             }
         }
     }

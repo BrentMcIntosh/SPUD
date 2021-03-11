@@ -31,9 +31,9 @@ export class Artist {
 
                             let item = list[i];
 
-                            let inner = new Artist();
+                            let interpol = new Interpolator();
 
-                            let button = inner.interpolate(template, item.artistId, item.name);
+                            let button = interpol.interpolate(template, item);
 
                             div.innerHTML += button;
                         }
@@ -59,7 +59,7 @@ export class Artist {
         this.simplePage('Delete', artistId, name);
     }
 
-    simplePage(page, artistId, name) {
+    simplePage(page, artist) {
         let xhttp = new XMLHttpRequest();
 
         xhttp.onreadystatechange = function () {
@@ -67,16 +67,13 @@ export class Artist {
 
                 let inner = new Artist();
 
-                if (!artistId) {
-                    artistId = 0;
-                }
-
-                if (!name) name = '';
-
                 document.getElementById('main').style.display = "none";
-                document.getElementById('main').innerHTML = inner.interpolate(this.responseText, artistId, name);
 
-                if (artistId === "0") {
+                let interpol = new Interpolator();
+
+                document.getElementById('main').innerHTML = interpol.interpolate(this.responseText, artist);
+
+                if (artist.artistId === "0") {
                     document.getElementById('remove').style.display = "none";
                 }
 
@@ -88,15 +85,11 @@ export class Artist {
         xhttp.send();
     }
 
-    save(artistId) {
+    save(artist) {
 
-        var xhttp = new XMLHttpRequest();
-
-        var data = '{ "artistId": {{artistId}}, "name": "{{name}}" }';
-
-        var name = document.getElementById("name").value;
-
-        data = this.interpolate(data, artistId, name);
+        let xhttp = new XMLHttpRequest();
+        let interpol = new Interpolator();
+        let data = interpol.docToJson(artist, document);
 
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4) {
@@ -107,10 +100,10 @@ export class Artist {
             }
         };
 
-        if (artistId === '0') {
-            xhttp.open('POST', '/api/Artists', true);
+        if (artist.artistId !== "0") {
+            xhttp.open('PUT', '/api/Artists/' + artist.artistId, true);
         } else {
-            xhttp.open('PUT', '/api/Artists/' + artistId, true);
+            xhttp.open('POST', '/api/Artists', true);
         }
 
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -141,14 +134,23 @@ export class Artist {
         } else {
             let data = element.dataset;
 
+            var artist = {
+                artistId: 0,
+                name: ""
+            };
+
+            let interpol = new Interpolator();
+
+            artist = interpol.dataToClass(artist, data);
+
             if (element.id === 'create' || event.srcElement.classList.contains('edit')) {
-                this.update(data['artistid'], data['name']);
+                this.update(artist);
             } else if (element.id === 'remove') {
-                this.remove(data['artistid'], data['name']);
+                this.remove(artist);
             } else if (element.id === 'save') {
-                this.save(data['artistid']);
+                this.save(artist);
             } else if (element.id === 'reallyDelete') {
-                this.reallyDelete(data['artistid']);
+                this.reallyDelete(artist.artistId);
             }
         }
     }

@@ -27,13 +27,13 @@ export class Genre {
 
                         div.getElementsByTagName('button')[1].remove();
 
+                        let interpol = new Interpolator();
+
                         for (let i = 0; i < list.length; i++) {
 
                             let item = list[i];
 
-                            let inner = new Genre();
-
-                            let button = inner.interpolate(template, item.genreId, item.name, item.description);
+                            let button = interpol.interpolate(template, item);
 
                             div.innerHTML += button;
                         }
@@ -51,33 +51,26 @@ export class Genre {
         xhttp.send();
     }
 
-    update(genreId, name, description) {
-        this.simplePage('Update', genreId, name, description);
+    update(genre) {
+        this.simplePage('Update', genre);
     }
 
-    remove(genreId, name, description) {
-        this.simplePage('Delete', genreId, name, description);
+    remove(genre) {
+        this.simplePage('Delete', genre);
     }
 
-    simplePage(page, genreId, name, description) {
+    simplePage(page, genre) {
         let xhttp = new XMLHttpRequest();
 
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
 
-                let inner = new Genre();
-
-                if (!genreId) {
-                    genreId = 0;
-                }
-
-                if (!name) name = '';
-                if (!description) description = '';
+                let interpol = new Interpolator();
 
                 document.getElementById('main').style.display = "none";
-                document.getElementById('main').innerHTML = inner.interpolate(this.responseText, genreId, name, description);
+                document.getElementById('main').innerHTML = interpol.interpolate(this.responseText, genre);
 
-                if (genreId === 0) {
+                if (genre.genreId === "0") {
                     document.getElementById('remove').style.display = "none";
                 }
 
@@ -89,16 +82,11 @@ export class Genre {
         xhttp.send();
     }
 
-    save(genreId) {
+    save(genre) {
 
-        var xhttp = new XMLHttpRequest();
-
-        var data = '{ "genreId": {{genreId}}, "name": "{{name}}", "description": "{{description}}" }';
-
-        var name = document.getElementById("name").value;
-        var description = document.getElementById("description").value;
-
-        data = this.interpolate(data, genreId, name, description);
+        let xhttp = new XMLHttpRequest();
+        let interpol = new Interpolator();
+        let data = interpol.docToJson(genre, document);
 
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4) {
@@ -109,10 +97,10 @@ export class Genre {
             }
         };
 
-        if (genreId === '0') {
+        if (genre.genreId === 0) {
             xhttp.open('POST', '/api/Genres', true);
         } else {
-            xhttp.open('PUT', '/api/Genres/' + genreId, true);
+            xhttp.open('PUT', '/api/Genres/' + genre.genreId, true);
         }
 
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -143,14 +131,24 @@ export class Genre {
         } else {
             let data = element.dataset;
 
+            var genre = {
+                genreId: 0,
+                name: "",
+                description: ""
+            };
+
+            let interpol = new Interpolator();
+
+            genre = interpol.dataToClass(genre, data);
+
             if (element.id === 'create' || event.srcElement.classList.contains('edit')) {
-                this.update(data['genreid'], data['name'], data['description']);
+                this.update(genre);
             } else if (element.id === 'remove') {
-                this.remove(data['genreid'], data['name'], data['description']);
+                this.remove(genre);
             } else if (element.id === 'save') {
-                this.save(data['genreid']);
+                this.save(genre);
             } else if (element.id === 'reallyDelete') {
-                this.reallyDelete(data['genreid']);
+                this.reallyDelete(genre.genreId);
             }
         }
     }

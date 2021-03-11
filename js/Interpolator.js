@@ -33,4 +33,20 @@ export class Interpolator {
 
         return JSON.stringify(thing);
     }
+
+    dataToClass(thing, data) {
+
+        for (var key in thing) {
+
+            var id = key.toLowerCase();
+
+            var value = data[id];
+
+            if (value) {
+                thing[key] = value;
+            }
+        }
+
+        return thing;
+    }
 }
