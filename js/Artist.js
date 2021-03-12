@@ -1,6 +1,6 @@
-﻿'use strict';
+﻿"use strict";
 
-import { Interpolator } from '/js/Interpolator.js';
+import { Interpolator } from "/js/Interpolator.js";
 
 export class Artist {
 
@@ -11,7 +11,7 @@ export class Artist {
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
 
-                let div = document.createElement('div');
+                let div = document.createElement("div");
 
                 div.innerHTML = this.responseText;
 
@@ -23,9 +23,9 @@ export class Artist {
 
                         let list = JSON.parse(this.responseText);
 
-                        let template = div.getElementsByTagName('button')[1].outerHTML;
+                        let template = div.getElementsByTagName("button")[1].outerHTML;
 
-                        div.getElementsByTagName('button')[1].remove();
+                        div.getElementsByTagName("button")[1].remove();
 
                         for (let i = 0; i < list.length; i++) {
 
@@ -38,25 +38,25 @@ export class Artist {
                             div.innerHTML += button;
                         }
 
-                        document.getElementById('main').innerHTML = div.innerHTML;
+                        document.getElementById("main").innerHTML = div.innerHTML;
                     }
                 };
 
-                jsonRequest.open('GET', '/api/' + page, true);
+                jsonRequest.open("GET", "/api/" + page, true);
                 jsonRequest.send();
             }
         };
 
-        xhttp.open('GET', '/Views/' + page + '/List.html', true);
+        xhttp.open("GET", "/Views/" + page + "/List.html", true);
         xhttp.send();
     }
 
-    update(artistId, name) {
-        this.simplePage('Update', artistId, name);
+    update(artist) {
+        this.simplePage("Update", artist);
     }
 
-    remove(artistId, name) {
-        this.simplePage('Delete', artistId, name);
+    remove(artist) {
+        this.simplePage("Delete", artist);
     }
 
     simplePage(page, artist) {
@@ -65,23 +65,21 @@ export class Artist {
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
 
-                let inner = new Artist();
-
-                document.getElementById('main').style.display = "none";
+                document.getElementById("main").style.display = "none";
 
                 let interpol = new Interpolator();
 
-                document.getElementById('main').innerHTML = interpol.interpolate(this.responseText, artist);
+                document.getElementById("main").innerHTML = interpol.interpolate(this.responseText, artist);
 
                 if (artist.artistId === "0") {
-                    document.getElementById('remove').style.display = "none";
+                    document.getElementById("remove").style.display = "none";
                 }
 
-                document.getElementById('main').style.display = "block";
+                document.getElementById("main").style.display = "block";
             }
         };
 
-        xhttp.open('GET', '/Views/Artists/' + page + '.html', true);
+        xhttp.open("GET", "/Views/Artists/" + page + ".html", true);
         xhttp.send();
     }
 
@@ -96,14 +94,14 @@ export class Artist {
 
                 let inner = new Artist();
 
-                inner.replace('Artists');
+                inner.replace("Artists");
             }
         };
 
-        if (artist.artistId !== "0") {
-            xhttp.open('PUT', '/api/Artists/' + artist.artistId, true);
+        if (artist.artistId) {
+            xhttp.open("PUT", "/api/Artists/" + artist.artistId, true);
         } else {
-            xhttp.open('POST', '/api/Artists', true);
+            xhttp.open("POST", "/api/Artists", true);
         }
 
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -119,18 +117,18 @@ export class Artist {
 
                 let inner = new Artist();
 
-                inner.replace('Artists');
+                inner.replace("Artists");
             }
         };
 
-        xhttp.open('DELETE', '/api/Artists/' + artistId, true);
+        xhttp.open("DELETE", "/api/Artists/" + artistId, true);
         xhttp.send();
     }
 
     route(element) {
 
-        if (element.innerText === 'ARTISTS' || element.id === 'cancel') {
-            this.replace('Artists');
+        if (element.innerText === "ARTISTS" || element.id === "cancel") {
+            this.replace("Artists");
         } else {
             let data = element.dataset;
 
@@ -143,13 +141,13 @@ export class Artist {
 
             artist = interpol.dataToClass(artist, data);
 
-            if (element.id === 'create' || event.srcElement.classList.contains('edit')) {
+            if (element.id === "create" || event.srcElement.classList.contains("edit")) {
                 this.update(artist);
-            } else if (element.id === 'remove') {
+            } else if (element.id === "remove") {
                 this.remove(artist);
-            } else if (element.id === 'save') {
+            } else if (element.id === "save") {
                 this.save(artist);
-            } else if (element.id === 'reallyDelete') {
+            } else if (element.id === "reallyDelete") {
                 this.reallyDelete(artist.artistId);
             }
         }

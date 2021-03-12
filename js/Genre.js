@@ -1,6 +1,6 @@
-﻿'use strict';
+﻿"use strict";
 
-import { Interpolator } from '/js/Interpolator.js';
+import { Interpolator } from "/js/Interpolator.js";
 
 export class Genre {
 
@@ -11,7 +11,7 @@ export class Genre {
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
 
-                let div = document.createElement('div');
+                let div = document.createElement("div");
 
                 div.innerHTML = this.responseText;
 
@@ -23,9 +23,9 @@ export class Genre {
 
                         let list = JSON.parse(this.responseText);
 
-                        let template = div.getElementsByTagName('button')[1].outerHTML;
+                        let template = div.getElementsByTagName("button")[1].outerHTML;
 
-                        div.getElementsByTagName('button')[1].remove();
+                        div.getElementsByTagName("button")[1].remove();
 
                         let interpol = new Interpolator();
 
@@ -38,25 +38,25 @@ export class Genre {
                             div.innerHTML += button;
                         }
 
-                        document.getElementById('main').innerHTML = div.innerHTML;
+                        document.getElementById("main").innerHTML = div.innerHTML;
                     }
                 };
 
-                jsonRequest.open('GET', '/api/' + page, true);
+                jsonRequest.open("GET", "/api/" + page, true);
                 jsonRequest.send();
             }
         };
 
-        xhttp.open('GET', '/Views/' + page + '/List.html', true);
+        xhttp.open("GET", "/Views/" + page + "/List.html", true);
         xhttp.send();
     }
 
     update(genre) {
-        this.simplePage('Update', genre);
+        this.simplePage("Update", genre);
     }
 
     remove(genre) {
-        this.simplePage('Delete', genre);
+        this.simplePage("Delete", genre);
     }
 
     simplePage(page, genre) {
@@ -67,18 +67,18 @@ export class Genre {
 
                 let interpol = new Interpolator();
 
-                document.getElementById('main').style.display = "none";
-                document.getElementById('main').innerHTML = interpol.interpolate(this.responseText, genre);
+                document.getElementById("main").style.display = "none";
+                document.getElementById("main").innerHTML = interpol.interpolate(this.responseText, genre);
 
                 if (genre.genreId === "0") {
-                    document.getElementById('remove').style.display = "none";
+                    document.getElementById("remove").style.display = "none";
                 }
 
-                document.getElementById('main').style.display = "block";
+                document.getElementById("main").style.display = "block";
             }
         };
 
-        xhttp.open('GET', '/Views/Genres/' + page + '.html', true);
+        xhttp.open("GET", "/Views/Genres/" + page + ".html", true);
         xhttp.send();
     }
 
@@ -93,14 +93,14 @@ export class Genre {
 
                 let inner = new Genre();
 
-                inner.replace('Genres');
+                inner.replace("Genres");
             }
         };
 
-        if (genre.genreId === 0) {
-            xhttp.open('POST', '/api/Genres', true);
+        if (genre.genreId) {
+            xhttp.open("PUT", "/api/Genres/" + genre.genreId, true);
         } else {
-            xhttp.open('PUT', '/api/Genres/' + genre.genreId, true);
+            xhttp.open("POST", "/api/Genres", true);
         }
 
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -116,18 +116,18 @@ export class Genre {
 
                 let inner = new Genre();
 
-                inner.replace('Genres');
+                inner.replace("Genres");
             }
         };
 
-        xhttp.open('DELETE', '/api/Genres/' + genreId, true);
+        xhttp.open("DELETE", "/api/Genres/" + genreId, true);
         xhttp.send();
     }
 
     route(element) {
 
-        if (element.innerText === 'GENRES' || element.id === 'cancel') {
-            this.replace('Genres');
+        if (element.innerText === "GENRES" || element.id === "cancel") {
+            this.replace("Genres");
         } else {
             let data = element.dataset;
 
@@ -141,13 +141,13 @@ export class Genre {
 
             genre = interpol.dataToClass(genre, data);
 
-            if (element.id === 'create' || event.srcElement.classList.contains('edit')) {
+            if (element.id === "create" || event.srcElement.classList.contains("edit")) {
                 this.update(genre);
-            } else if (element.id === 'remove') {
+            } else if (element.id === "remove") {
                 this.remove(genre);
-            } else if (element.id === 'save') {
+            } else if (element.id === "save") {
                 this.save(genre);
-            } else if (element.id === 'reallyDelete') {
+            } else if (element.id === "reallyDelete") {
                 this.reallyDelete(genre.genreId);
             }
         }

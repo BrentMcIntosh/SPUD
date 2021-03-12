@@ -1,4 +1,4 @@
-﻿'use strict';
+﻿"use strict";
 
 export class Interpolator {
 
@@ -6,7 +6,7 @@ export class Interpolator {
 
         for (var key in data) {
 
-            var reg = new RegExp('{{' + key + '}}', 'g');
+            var reg = new RegExp("{{" + key + "}}", "g");
 
             var value = data[key];
 
@@ -28,6 +28,14 @@ export class Interpolator {
 
             if (element) {
                 thing[key] = element.value;
+            }
+            else if (key.endsWith("Id")) {
+
+                let test = parseInt(thing[key]);
+
+                if (!test) {
+                    thing[key] = 0;
+                }
             }
         }
 

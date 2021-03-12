@@ -1,6 +1,6 @@
-﻿'use strict';
+﻿"use strict";
 
-import { Interpolator } from '/js/Interpolator.js';
+import { Interpolator } from "/js/Interpolator.js";
 
 export class Album {
 
@@ -21,7 +21,7 @@ export class Album {
 
                         let list = JSON.parse(this.responseText);
 
-                        let div = document.createElement('div');
+                        let div = document.createElement("div");
 
                         div.innerHTML = listHtml;
 
@@ -33,7 +33,7 @@ export class Album {
 
                             let item = list[i];
 
-                            let albumDiv = document.createElement('div');
+                            let albumDiv = document.createElement("div");
 
                             var interpol = new Interpolator();
 
@@ -44,16 +44,16 @@ export class Album {
                             div.innerHTML += albumDiv.innerHTML;
                         }
 
-                        document.getElementById('main').innerHTML = div.innerHTML;
+                        document.getElementById("main").innerHTML = div.innerHTML;
                     }
                 };
 
-                jsonRequest.open('GET', '/api/' + page, true);
+                jsonRequest.open("GET", "/api/" + page, true);
                 jsonRequest.send();
             }
         };
 
-        xhttp.open('GET', '/Views/' + page + '/List.html', true);
+        xhttp.open("GET", "/Views/" + page + "/List.html", true);
         xhttp.send();
     }
 
@@ -83,8 +83,8 @@ export class Album {
 
         var text = select.innerHTML;
 
-        var replaceText = '<option value="' + id + '">';
-        var replaceWith = '<option value="' + id + '" selected>';
+        var replaceText = "<option value='" + id + "'>";
+        var replaceWith = "<option value='" + id + "' selected>";
 
         return text.replace(replaceText, replaceWith);
     }
@@ -100,7 +100,7 @@ export class Album {
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
 
-                let div = document.createElement('div');
+                let div = document.createElement("div");
 
                 div.innerHTML = this.responseText;
 
@@ -119,33 +119,33 @@ export class Album {
 
                         div.innerHTML = interpol.interpolate(div.innerHTML, album);
 
-                        document.getElementById('main').style.display = "none";
+                        document.getElementById("main").style.display = "none";
 
-                        document.getElementById('main').innerHTML = div.innerHTML;
+                        document.getElementById("main").innerHTML = div.innerHTML;
 
                         document.getElementById("artistId").innerHTML = inner.setSelect(album.artistId, artists, "artistId");
 
                         document.getElementById("genreId").innerHTML = inner.setSelect(album.genreId, genres, "genreId");
 
                         if (albumId === 0) {
-                            document.getElementById('remove').style.display = "none";
+                            document.getElementById("remove").style.display = "none";
                         }
 
-                        document.getElementById('main').style.display = "block";
+                        document.getElementById("main").style.display = "block";
                     }
                 };
 
-                jsonRequest.open('GET', 'api/Albums/' + albumId, true);
+                jsonRequest.open("GET", "api/Albums/" + albumId, true);
                 jsonRequest.send();
             }
         };
 
-        xhttp.open('GET', '/Views/Albums/Update.html', true);
+        xhttp.open("GET", "/Views/Albums/Update.html", true);
         xhttp.send();
     }
 
     remove(album) {
-        this.simplePage('Delete', album);
+        this.simplePage("Delete", album);
     }
 
     simplePage(page, album) {
@@ -156,15 +156,15 @@ export class Album {
 
                 var interpol = new Interpolator();
 
-                document.getElementById('main').innerHTML = interpol.interpolate(this.responseText, album);
+                document.getElementById("main").innerHTML = interpol.interpolate(this.responseText, album);
 
                 if (albumId === 0) {
-                    document.getElementById('remove').style.display = "none";
+                    document.getElementById("remove").style.display = "none";
                 }
             }
         };
 
-        xhttp.open('GET', '/Views/Albums/' + page + '.html', true);
+        xhttp.open("GET", "/Views/Albums/" + page + ".html", true);
         xhttp.send();
     }
 
@@ -179,14 +179,14 @@ export class Album {
 
                 let inner = new Album();
 
-                inner.replace('Albums');
+                inner.replace("Albums");
             }
         };
 
         if (album.albumId) {
-            xhttp.open('PUT', '/api/Albums/' + album.albumId, true);
+            xhttp.open("PUT", "/api/Albums/" + album.albumId, true);
         } else {
-            xhttp.open('POST', '/api/Albums', true);
+            xhttp.open("POST", "/api/Albums", true);
         }
 
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -202,18 +202,18 @@ export class Album {
 
                 let inner = new Album();
 
-                inner.replace('Albums');
+                inner.replace("Albums");
             }
         };
 
-        xhttp.open('DELETE', '/api/Albums/' + albumId, true);
+        xhttp.open("DELETE", "/api/Albums/" + albumId, true);
         xhttp.send();
     }
 
     route(element) {
 
-        if (element.id === 'listAlbums' || element.id === 'Cancel') {
-            this.replace('Albums');
+        if (element.id === "listAlbums" || element.id === "Cancel") {
+            this.replace("Albums");
         } else {
             let data = element.dataset;
 
@@ -231,13 +231,13 @@ export class Album {
 
             album = interpol.dataToClass(album, data);
 
-            if (element.id === 'create' || event.srcElement.classList.contains('edit')) {
+            if (element.id === "create" || event.srcElement.classList.contains("edit")) {
                 this.update(album.albumId);
-            } else if (element.id === 'remove') {
+            } else if (element.id === "remove") {
                 this.remove(album);
-            } else if (element.id === 'save') {
+            } else if (element.id === "save") {
                 this.save(album);
-            } else if (element.id === 'reallyDelete') {
+            } else if (element.id === "reallyDelete") {
                 this.reallyDelete(album.albumId);
             }
         }
