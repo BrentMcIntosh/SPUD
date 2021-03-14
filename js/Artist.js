@@ -1,54 +1,12 @@
 ﻿"use strict";
 
-import { Interpolator } from "/js/Interpolator.js";
+import { Interpolator } from "/js/interpolator.js";
+import { Http } from "/js/http.js";
 
 export class Artist {
 
-    replace(page) {
-
-        let xhttp = new XMLHttpRequest();
-
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-
-                let div = document.createElement("div");
-
-                div.innerHTML = this.responseText;
-
-                let jsonRequest = new XMLHttpRequest();
-
-                jsonRequest.onreadystatechange = function () {
-
-                    if (this.readyState == 4 && this.status == 200) {
-
-                        let list = JSON.parse(this.responseText);
-
-                        let template = div.getElementsByTagName("button")[1].outerHTML;
-
-                        div.getElementsByTagName("button")[1].remove();
-
-                        for (let i = 0; i < list.length; i++) {
-
-                            let item = list[i];
-
-                            let interpol = new Interpolator();
-
-                            let button = interpol.interpolate(template, item);
-
-                            div.innerHTML += button;
-                        }
-
-                        document.getElementById("main").innerHTML = div.innerHTML;
-                    }
-                };
-
-                jsonRequest.open("GET", "/api/" + page, true);
-                jsonRequest.send();
-            }
-        };
-
-        xhttp.open("GET", "/Views/" + page + "/List.html", true);
-        xhttp.send();
+    list() {
+        new Http().get("/Views/Artists/List.html", new Artist().getList, "");
     }
 
     update(artist) {
@@ -59,76 +17,76 @@ export class Artist {
         this.simplePage("Delete", artist);
     }
 
+    getList(template) {
+        new Http().get("api/Artists/", new Artist().combineListAndTemplate, template);
+    }
+
+    combineListAndTemplate(artistList, listHtml) {
+
+        let div = document.createElement("div");
+
+        div.innerHTML = listHtml;
+
+        let list = JSON.parse(artistList);
+
+        let template = div.getElementsByTagName("button")[1].outerHTML;
+
+        div.getElementsByTagName("button")[1].remove();
+
+        for (let i = 0; i < list.length; i++) {
+
+            let item = list[i];
+
+            let interpol = new Interpolator();
+
+            let button = interpol.interpolate(template, item);
+
+            div.innerHTML += button;
+        }
+
+        document.getElementById("main").innerHTML = div.innerHTML;
+    }
+
+    showPage(template, artist) {
+        document.getElementById("main").style.display = "none";
+
+        let interpol = new Interpolator();
+
+        document.getElementById("main").innerHTML = interpol.interpolate(template, artist);
+
+        if (artist.artistId === "0") {
+            document.getElementById("remove").style.display = "none";
+        }
+
+        document.getElementById("main").style.display = "block";
+    }
+
     simplePage(page, artist) {
-        let xhttp = new XMLHttpRequest();
-
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-
-                document.getElementById("main").style.display = "none";
-
-                let interpol = new Interpolator();
-
-                document.getElementById("main").innerHTML = interpol.interpolate(this.responseText, artist);
-
-                if (artist.artistId === "0") {
-                    document.getElementById("remove").style.display = "none";
-                }
-
-                document.getElementById("main").style.display = "block";
-            }
-        };
-
-        xhttp.open("GET", "/Views/Artists/" + page + ".html", true);
-        xhttp.send();
+        new Http().get("/Views/Artists/" + page + ".html", this.showPage, artist);
     }
 
     save(artist) {
 
-        let xhttp = new XMLHttpRequest();
         let interpol = new Interpolator();
         let data = interpol.docToJson(artist, document);
-
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4) {
-
-                let inner = new Artist();
-
-                inner.replace("Artists");
-            }
-        };
+        let inner = new Artist();
+        let http = new Http();
 
         if (artist.artistId) {
-            xhttp.open("PUT", "/api/Artists/" + artist.artistId, true);
+            http.put("/api/Artists/" + artist.artistId, data, inner.list, "Artists");
         } else {
-            xhttp.open("POST", "/api/Artists", true);
+            http.post("/api/Artists", data, inner.list, "Artists");
         }
-
-        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhttp.send(data);
     }
 
     reallyDelete(artistId) {
-
-        var xhttp = new XMLHttpRequest();
-
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4) {
-
-                let inner = new Artist();
-
-                inner.replace("Artists");
-            }
-        };
-
-        xhttp.open("DELETE", "/api/Artists/" + artistId, true);
-        xhttp.send();
+        new Http().delete("/api/Artists/" + artistId, this.list, "");
     }
 
     route(element) {
 
         if (element.innerText === "ARTISTS" || element.id === "cancel") {
-            this.replace("Artists");
+            this.list();
         } else {
             let data = element.dataset;
 

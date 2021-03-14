@@ -1,54 +1,12 @@
 ﻿"use strict";
 
-import { Interpolator } from "/js/Interpolator.js";
+import { Interpolator } from "/js/interpolator.js";
+import { Http } from "/js/http.js";
 
 export class Genre {
 
-    replace(page) {
-
-        let xhttp = new XMLHttpRequest();
-
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-
-                let div = document.createElement("div");
-
-                div.innerHTML = this.responseText;
-
-                let jsonRequest = new XMLHttpRequest();
-
-                jsonRequest.onreadystatechange = function () {
-
-                    if (this.readyState == 4 && this.status == 200) {
-
-                        let list = JSON.parse(this.responseText);
-
-                        let template = div.getElementsByTagName("button")[1].outerHTML;
-
-                        div.getElementsByTagName("button")[1].remove();
-
-                        let interpol = new Interpolator();
-
-                        for (let i = 0; i < list.length; i++) {
-
-                            let item = list[i];
-
-                            let button = interpol.interpolate(template, item);
-
-                            div.innerHTML += button;
-                        }
-
-                        document.getElementById("main").innerHTML = div.innerHTML;
-                    }
-                };
-
-                jsonRequest.open("GET", "/api/" + page, true);
-                jsonRequest.send();
-            }
-        };
-
-        xhttp.open("GET", "/Views/" + page + "/List.html", true);
-        xhttp.send();
+    list() {
+        new Http().get("/Views/Genres/List.html", new Genre().getList, "");
     }
 
     update(genre) {
@@ -59,75 +17,72 @@ export class Genre {
         this.simplePage("Delete", genre);
     }
 
+    getList(template) {
+        new Http().get("api/Genres", new Genre().combineListAndTemplate, template);
+    }
+
+    showPage(template, genre) {
+
+        document.getElementById("main").style.display = "none";
+        document.getElementById("main").innerHTML = new Interpolator().interpolate(template, genre);
+
+        if (genre.genreId === "0") {
+            document.getElementById("remove").style.display = "none";
+        }
+
+        document.getElementById("main").style.display = "block";
+    }
+
+    combineListAndTemplate(genreList, listHtml) {
+
+        let div = document.createElement("div");
+
+        div.innerHTML = listHtml;
+
+        let list = JSON.parse(genreList);
+
+        let template = div.getElementsByTagName("button")[1].outerHTML;
+
+        div.getElementsByTagName("button")[1].remove();
+
+        for (let i = 0; i < list.length; i++) {
+
+            let item = list[i];
+
+            let button = new Interpolator().interpolate(template, item);
+
+            div.innerHTML += button;
+        }
+
+        document.getElementById("main").innerHTML = div.innerHTML;
+    }
+
     simplePage(page, genre) {
-        let xhttp = new XMLHttpRequest();
-
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-
-                let interpol = new Interpolator();
-
-                document.getElementById("main").style.display = "none";
-                document.getElementById("main").innerHTML = interpol.interpolate(this.responseText, genre);
-
-                if (genre.genreId === "0") {
-                    document.getElementById("remove").style.display = "none";
-                }
-
-                document.getElementById("main").style.display = "block";
-            }
-        };
-
-        xhttp.open("GET", "/Views/Genres/" + page + ".html", true);
-        xhttp.send();
+        new Http().get("/Views/Genres/" + page + ".html", new Genre().showPage, genre);
     }
 
     save(genre) {
 
-        let xhttp = new XMLHttpRequest();
         let interpol = new Interpolator();
         let data = interpol.docToJson(genre, document);
-
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4) {
-
-                let inner = new Genre();
-
-                inner.replace("Genres");
-            }
-        };
+        let inner = new Genre();
+        let http = new Http();
 
         if (genre.genreId) {
-            xhttp.open("PUT", "/api/Genres/" + genre.genreId, true);
+            http.put("/api/Genres/" + genre.genreId, data, inner.list, "Genres");
         } else {
-            xhttp.open("POST", "/api/Genres", true);
+            http.post("/api/Genres", data, inner.list, "Genres");
         }
-
-        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhttp.send(data);
     }
 
     reallyDelete(genreId) {
-
-        var xhttp = new XMLHttpRequest();
-
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4) {
-
-                let inner = new Genre();
-
-                inner.replace("Genres");
-            }
-        };
-
-        xhttp.open("DELETE", "/api/Genres/" + genreId, true);
-        xhttp.send();
+        new Http().delete("/api/Genres/" + genreId, new Genre().list, "");
     }
 
     route(element) {
 
         if (element.innerText === "GENRES" || element.id === "cancel") {
-            this.replace("Genres");
+            this.list();
         } else {
             let data = element.dataset;
 

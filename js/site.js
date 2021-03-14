@@ -1,8 +1,8 @@
 ﻿"use strict";
 
-import { Genre } from "/js/Genre.js";
-import { Artist } from "/js/Artist.js";
-import { Album } from "/js/Album.js";
+import { Genre } from "/js/genre.js";
+import { Artist } from "/js/artist.js";
+import { Album } from "/js/album.js";
 
 
 function what(thing) {

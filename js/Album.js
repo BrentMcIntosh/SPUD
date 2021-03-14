@@ -1,60 +1,87 @@
 ﻿"use strict";
 
-import { Interpolator } from "/js/Interpolator.js";
+import { Interpolator } from "/js/interpolator.js";
+import { Http } from "/js/http.js";
 
 export class Album {
 
-    replace(page) {
+    list() {
+        new Http().get("/Views/Albums/List.html", new Album().getList, "");
+    }
 
-        let xhttp = new XMLHttpRequest();
+    update(albumId) {
+        new Http().get("/Views/Albums/Update.html", this.getData, albumId);
+    }
 
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
+    remove(album) {
+        new Http().get("/Views/Albums/Delete.html", this.showPage, album);
+    }
 
-                let listHtml = this.responseText;
+    getData(template, albumId) {
+        new Http().get("api/Albums/" + albumId, new Album().combineDataAndTemplate, template);
+    }
 
-                let jsonRequest = new XMLHttpRequest();
+    getList(template) {
+        new Http().get("api/Albums/", new Album().combineListAndTemplate, template);
+    }
 
-                jsonRequest.onreadystatechange = function () {
+    combineDataAndTemplate(data, template) {
 
-                    if (this.readyState == 4 && this.status == 200) {
+        let div = document.createElement("div");
 
-                        let list = JSON.parse(this.responseText);
+        div.innerHTML = template;
 
-                        let div = document.createElement("div");
+        let albumEdit = JSON.parse(data);
+        let album = albumEdit.album;
+        let artists = albumEdit.artists;
+        let genres = albumEdit.genres;
+        let inner = new Album();
+        let interpol = new Interpolator();
 
-                        div.innerHTML = listHtml;
+        div.innerHTML = interpol.interpolate(div.innerHTML, album);
 
-                        let template = div.getElementsByClassName("container")[0].outerHTML;
+        document.getElementById("main").style.display = "none";
 
-                        div.getElementsByClassName("container")[0].remove();
+        document.getElementById("main").innerHTML = div.innerHTML;
 
-                        for (let i = 0; i < list.length; i++) {
+        document.getElementById("artistId").innerHTML = inner.setSelect(album.artistId, artists, "artistId");
 
-                            let item = list[i];
+        document.getElementById("genreId").innerHTML = inner.setSelect(album.genreId, genres, "genreId");
 
-                            let albumDiv = document.createElement("div");
+        if (album.albumId === 0) {
+            document.getElementById("remove").style.display = "none";
+        }
 
-                            var interpol = new Interpolator();
+        document.getElementById("main").style.display = "block";
+    }
 
-                            albumDiv.innerHTML = interpol.interpolate(template, item);
+    combineListAndTemplate(albumList, listHtml) {
+        let list = JSON.parse(albumList);
 
-                            albumDiv.getElementsByClassName("image")[0].src = item.albumArtUrl;
+        let div = document.createElement("div");
 
-                            div.innerHTML += albumDiv.innerHTML;
-                        }
+        div.innerHTML = listHtml;
 
-                        document.getElementById("main").innerHTML = div.innerHTML;
-                    }
-                };
+        let template = div.getElementsByClassName("container")[0].outerHTML;
 
-                jsonRequest.open("GET", "/api/" + page, true);
-                jsonRequest.send();
-            }
-        };
+        div.getElementsByClassName("container")[0].remove();
 
-        xhttp.open("GET", "/Views/" + page + "/List.html", true);
-        xhttp.send();
+        for (let i = 0; i < list.length; i++) {
+
+            let item = list[i];
+
+            let albumDiv = document.createElement("div");
+
+            var interpol = new Interpolator();
+
+            albumDiv.innerHTML = interpol.interpolate(template, item);
+
+            albumDiv.getElementsByClassName("image")[0].src = item.albumArtUrl;
+
+            div.innerHTML += albumDiv.innerHTML;
+        }
+
+        document.getElementById("main").innerHTML = div.innerHTML;
     }
 
     setSelect(id, items, idType) {
@@ -89,131 +116,34 @@ export class Album {
         return text.replace(replaceText, replaceWith);
     }
 
-    update(albumId) {
+    showPage(template, data) {
+        document.getElementById("main").innerHTML = new Interpolator().interpolate(template, data);
 
-        let xhttp = new XMLHttpRequest();
-
-        if (!albumId) {
-            albumId = 0;
+        if (albumId === 0) {
+            document.getElementById("remove").style.display = "none";
         }
-
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-
-                let div = document.createElement("div");
-
-                div.innerHTML = this.responseText;
-
-                let jsonRequest = new XMLHttpRequest();
-
-                jsonRequest.onreadystatechange = function () {
-
-                    if (this.readyState == 4 && this.status == 200) {
-
-                        let albumEdit = JSON.parse(this.responseText);
-                        let album = albumEdit.album;
-                        let artists = albumEdit.artists;
-                        let genres = albumEdit.genres;
-                        let inner = new Album();
-                        let interpol = new Interpolator();
-
-                        div.innerHTML = interpol.interpolate(div.innerHTML, album);
-
-                        document.getElementById("main").style.display = "none";
-
-                        document.getElementById("main").innerHTML = div.innerHTML;
-
-                        document.getElementById("artistId").innerHTML = inner.setSelect(album.artistId, artists, "artistId");
-
-                        document.getElementById("genreId").innerHTML = inner.setSelect(album.genreId, genres, "genreId");
-
-                        if (albumId === 0) {
-                            document.getElementById("remove").style.display = "none";
-                        }
-
-                        document.getElementById("main").style.display = "block";
-                    }
-                };
-
-                jsonRequest.open("GET", "api/Albums/" + albumId, true);
-                jsonRequest.send();
-            }
-        };
-
-        xhttp.open("GET", "/Views/Albums/Update.html", true);
-        xhttp.send();
-    }
-
-    remove(album) {
-        this.simplePage("Delete", album);
-    }
-
-    simplePage(page, album) {
-        let xhttp = new XMLHttpRequest();
-
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-
-                var interpol = new Interpolator();
-
-                document.getElementById("main").innerHTML = interpol.interpolate(this.responseText, album);
-
-                if (albumId === 0) {
-                    document.getElementById("remove").style.display = "none";
-                }
-            }
-        };
-
-        xhttp.open("GET", "/Views/Albums/" + page + ".html", true);
-        xhttp.send();
     }
 
     save(album) {
-
-        let xhttp = new XMLHttpRequest();
         let interpol = new Interpolator();
         let data = interpol.docToJson(album, document);
-
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4) {
-
-                let inner = new Album();
-
-                inner.replace("Albums");
-            }
-        };
+        let http = new Http();
 
         if (album.albumId) {
-            xhttp.open("PUT", "/api/Albums/" + album.albumId, true);
+            http.put("/api/Albums/" + album.albumId, data, this.list, "");
         } else {
-            xhttp.open("POST", "/api/Albums", true);
+            http.post("/api/Albums", data, this.list, "");
         }
-
-        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhttp.send(data);
     }
 
     reallyDelete(albumId) {
-
-        var xhttp = new XMLHttpRequest();
-
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4) {
-
-                let inner = new Album();
-
-                inner.replace("Albums");
-            }
-        };
-
-        xhttp.open("DELETE", "/api/Albums/" + albumId, true);
-        xhttp.send();
+        new Http().delete("/api/Albums/" + albumId, this.list, "");
     }
 
     route(element) {
 
         if (element.id === "listAlbums" || element.id === "Cancel") {
-            this.replace("Albums");
+            this.list();
         } else {
             let data = element.dataset;
 
@@ -227,9 +157,7 @@ export class Album {
                 albumArtUrl: ""
             };
 
-            let interpol = new Interpolator();
-
-            album = interpol.dataToClass(album, data);
+            album = new Interpolator().dataToClass(album, data);
 
             if (element.id === "create" || event.srcElement.classList.contains("edit")) {
                 this.update(album.albumId);
