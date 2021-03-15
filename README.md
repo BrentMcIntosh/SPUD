@@ -9,7 +9,6 @@ Read
 #### Delete
 
 ## Basic Idea
-Much like the [Dogma Films](https://www.indiewire.com/2015/04/watch-lars-von-trier-explains-the-rules-of-dogme-95-187806/) I have a set of rules. Ugh. Can you say "pretentious" or what?
 
  1. The application must only use one page. 
  2. No libraries on the front-end.     
