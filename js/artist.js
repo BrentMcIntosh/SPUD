@@ -1,58 +1,54 @@
 ﻿"use strict";
 
-import { Interpolator } from "/js/interpolator.js";
+import { Dom } from "/js/dom.js";
 import { Http } from "/js/http.js";
+import { Interpolator } from "/js/interpolator.js";
 
 export class Artist {
 
     list() {
-        new Http().get("/Views/Artists/List.html", listTemplate => {
+        new Http().get("/Views/Artists/list.html", listTemplate => {
 
             new Http().get("api/Artists/", artistList => {
 
-                let div = document.createElement("div");
+                let dom = new Dom();
 
-                div.innerHTML = listTemplate;
+                dom.hide("main");
+                dom.setMain(listTemplate);
 
                 let list = JSON.parse(artistList);
-
-                let template = div.getElementsByTagName("button")[1].outerHTML;
-
-                div.getElementsByTagName("button")[1].remove();
+                let itemTemplate = dom.getListButton();
 
                 for (let i = 0; i < list.length; i++) {
-
-                    let item = list[i];
-
-                    let button = new Interpolator().interpolate(template, item);
-
-                    div.innerHTML += button;
+                    dom.createListButton(itemTemplate, list[i]);
                 }
 
-                document.getElementById("main").innerHTML = div.innerHTML;
+                dom.show("main");
             });
         });
     }
 
     update(artist) {
-        this.simplePage("Update", artist);
+        this.simplePage("update", artist);
     }
 
     remove(artist) {
-        this.simplePage("Delete", artist);
+        this.simplePage("delete", artist);
     }
 
     simplePage(page, artist) {
         new Http().get("/Views/Artists/" + page + ".html", template => {
-            document.getElementById("main").style.display = "none";
 
-            document.getElementById("main").innerHTML = new Interpolator().interpolate(template, artist);
+            let dom = new Dom();
 
-            if (artist.artistId === "0") {
-                document.getElementById("remove").style.display = "none";
+            dom.hide("main");
+            dom.setMain(new Interpolator().interpolate(template, artist));
+
+            if (!artist.artistId) {
+                dom.hide("remove");
             }
 
-            document.getElementById("main").style.display = "block";
+            dom.show("main");
         });
     }
 
@@ -73,17 +69,10 @@ export class Artist {
 
     route(element) {
 
-        if (element.innerText === "ARTISTS" || element.id === "cancel") {
+        if (element.id === "listArtists" || element.id === "cancel") {
             this.list();
         } else {
-            let data = element.dataset;
-
-            var artist = {
-                artistId: 0,
-                name: ""
-            };
-
-            artist = new Interpolator().dataToClass(artist, data);
+            let artist = new Interpolator().dataToClass({ artistId: 0, name: "" }, element.dataset);
 
             if (element.id === "create" || event.srcElement.classList.contains("edit")) {
                 this.update(artist);
@@ -97,4 +86,3 @@ export class Artist {
         }
     }
 }
-

@@ -3,7 +3,7 @@
 export class Http {
 
     post(url, data, callback, callbackArg) {
-        this.sendData("POST", url, data, callback, callbackArg)
+        this.sendData("POST", url, data, callback, callbackArg);
     }
 
     get(url, callback, callbackArg) {
