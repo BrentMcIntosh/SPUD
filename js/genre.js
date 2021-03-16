@@ -75,7 +75,7 @@ export class Genre {
         }
     }
 
-    reallyDelete(genreId) {
+    confirmDelete(genreId) {
         new Http().delete("/api/Genres/" + genreId, new Genre().list, "");
     }
 
@@ -102,8 +102,8 @@ export class Genre {
                 this.remove(genre);
             } else if (element.id === "save") {
                 this.save(genre);
-            } else if (element.id === "reallyDelete") {
-                this.reallyDelete(genre.genreId);
+            } else if (element.id === "confirmDelete") {
+                this.confirmDelete(genre.genreId);
             }
         }
     }

@@ -12,7 +12,7 @@ document.addEventListener("click", event => {
             new Genre().route(event.srcElement);
         }
         else if (event.srcElement.classList.contains("artist")) {
-            new Artist().route(event.srcElement);
+            Artist.route(event.srcElement);
         }
         else if (event.srcElement.classList.contains("album")) {
             new Album().route(event.srcElement);

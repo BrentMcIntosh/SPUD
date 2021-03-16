@@ -2,11 +2,11 @@
 
 export class Http {
 
-    post(url, data, callback, callbackArg) {
+    static post(url, data, callback, callbackArg) {
         this.sendData("POST", url, data, callback, callbackArg);
     }
 
-    get(url, callback, callbackArg) {
+    static get(url, callback, callbackArg) {
         let request = new XMLHttpRequest();
 
         request.onreadystatechange = function () {
@@ -19,11 +19,11 @@ export class Http {
         request.send();
     }
 
-    put(url, data, callback, callbackArg) {
+    static put(url, data, callback, callbackArg) {
         this.sendData("PUT", url, data, callback, callbackArg)
     }
 
-    delete(url, callback, callbackArg) {
+    static delete(url, callback, callbackArg) {
         let request = new XMLHttpRequest();
 
         request.onreadystatechange = function () {
@@ -36,7 +36,7 @@ export class Http {
         request.send();
     }
 
-    sendData(method, url, data, callback, callbackArg) {
+    static sendData(method, url, data, callback, callbackArg) {
 
         let xhttp = new XMLHttpRequest();
 

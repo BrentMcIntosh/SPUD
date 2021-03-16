@@ -2,7 +2,7 @@
 
 export class Interpolator {
 
-    interpolate(template, data) {
+    static interpolate(template, data) {
 
         for (var key in data) {
 
@@ -20,7 +20,7 @@ export class Interpolator {
         return template;
     }
 
-    docToJson(thing, doc) {
+    static docToJson(thing, doc) {
 
         for (var key in thing) {
 
@@ -42,7 +42,7 @@ export class Interpolator {
         return JSON.stringify(thing);
     }
 
-    dataToClass(thing, data) {
+    static dataToClass(thing, data) {
 
         for (var key in thing) {
 

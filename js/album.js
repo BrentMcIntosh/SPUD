@@ -136,7 +136,7 @@ export class Album {
         }
     }
 
-    reallyDelete(albumId) {
+    confirmDelete(albumId) {
         new Http().delete("/api/Albums/" + albumId, this.list, "");
     }
 
@@ -165,8 +165,8 @@ export class Album {
                 this.remove(album);
             } else if (element.id === "save") {
                 this.save(album);
-            } else if (element.id === "reallyDelete") {
-                this.reallyDelete(album.albumId);
+            } else if (element.id === "confirmDelete") {
+                this.confirmDelete(album.albumId);
             }
         }
     }

@@ -4,15 +4,15 @@ import { Interpolator } from "/js/interpolator.js";
 
 export class Dom {
 
-    hide(id) {
+    static hide(id) {
         document.getElementById(id).style.display = "none";
     }
 
-    show(id) {
+    static show(id) {
         document.getElementById(id).style.display = "block";
     }
 
-    setMain(html, append) {
+    static setMain(html, append) {
 
         if (append) {
             document.getElementById("main").innerHTML += html;
@@ -22,7 +22,7 @@ export class Dom {
         }
     }
 
-    getListButton() {
+    static getButtonTemplate() {
 
         let listButton = document.getElementById("listButton");
 
@@ -30,14 +30,40 @@ export class Dom {
 
         listButton.remove();
 
-        return html;
+        return html.replace(`id="listButton" `, "");
     }
     
-    createListButton(itemTemplate, item) {
-        let buttonHtml = new Interpolator().interpolate(itemTemplate, item);
+    static createListButton(template, data) {
 
-        buttonHtml = buttonHtml.replace("listButton", "artist" + item.artistId);
+        let button = Interpolator.interpolate(template, data);
 
-        this.setMain(buttonHtml, true);
+        this.setMain(button, true);
     }
+
+    static list(template, json) {
+
+        Dom.hide("main");
+        Dom.setMain(template);
+
+        let itemTemplate = Dom.getButtonTemplate();
+
+        for (let item of JSON.parse(json)) {
+            Dom.createListButton(itemTemplate, item);
+        }
+
+        Dom.show("main");
+    }
+
+
+    static page(template, data, hideRemove) {
+
+        Dom.hide("main");
+        Dom.setMain(Interpolator.interpolate(template, data));
+
+        if (hideRemove) {
+            Dom.hide("remove");
+        }
+
+        Dom.show("main");
+}
 }
