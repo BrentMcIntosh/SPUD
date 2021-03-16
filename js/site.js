@@ -9,13 +9,13 @@ document.addEventListener("click", event => {
     if (event.srcElement.nodeName === "BUTTON" || event.srcElement.nodeName === "IMG" || event.srcElement.nodeName === "DIV") {
 
         if (event.srcElement.classList.contains("genre")) {
-            new Genre().route(event.srcElement);
+            Genre.route(event.srcElement);
         }
         else if (event.srcElement.classList.contains("artist")) {
             Artist.route(event.srcElement);
         }
         else if (event.srcElement.classList.contains("album")) {
-            new Album().route(event.srcElement);
+            Album.route(event.srcElement);
         }
     }
 });

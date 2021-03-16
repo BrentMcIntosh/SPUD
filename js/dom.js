@@ -37,7 +37,7 @@ export class Dom {
 
         let button = Interpolator.interpolate(template, data);
 
-        this.setMain(button, true);
+        Dom.setMain(button, true);
     }
 
     static list(template, json) {

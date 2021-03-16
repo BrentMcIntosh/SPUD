@@ -1,153 +1,72 @@
 ﻿"use strict";
 
-import { Interpolator } from "/js/interpolator.js";
+import { Dom } from "/js/dom.js";
 import { Http } from "/js/http.js";
+import { Interpolator } from "/js/interpolator.js";
 
 export class Album {
 
-    list() {
-        new Http().get("/Views/Albums/List.html", new Album().getList, "");
+    static list() {
+        Http.get("/Views/Albums/list.html", template => {
+            Http.get("api/Albums/", json => {
+
+                Dom.hide("main");
+                Dom.setMain(template);
+
+                let itemTemplate = Dom.getButtonTemplate();
+
+                for (let item of JSON.parse(json)) {
+
+                    let button = Interpolator.interpolate(itemTemplate, item);
+
+                    button = button.replace(`src=""`, `src="` + item.albumArtUrl + `"`);
+
+                    Dom.setMain(button, true);
+                }
+
+                Dom.show("main");
+            });
+        });
     }
 
-    update(albumId) {
-        new Http().get("/Views/Albums/Update.html", this.getData, albumId);
+    static update(album) {
+        Album.simplePage("update", album);
     }
 
-    remove(album) {
-        new Http().get("/Views/Albums/Delete.html", this.showPage, album);
+    static remove(album) {
+        Album.simplePage("delete", album);
     }
 
-    getData(template, albumId) {
-        new Http().get("api/Albums/" + albumId, new Album().combineDataAndTemplate, template);
+    static simplePage(page, album) {
+        Http.get("/Views/Albums/" + page + ".html", template => {
+            Dom.page(template, album, !album.albumId);
+        });
     }
 
-    getList(template) {
-        new Http().get("api/Albums/", new Album().combineListAndTemplate, template);
-    }
+    static save(album) {
 
-    combineDataAndTemplate(data, template) {
-
-        let div = document.createElement("div");
-
-        div.innerHTML = template;
-
-        let albumEdit = JSON.parse(data);
-        let album = albumEdit.album;
-        let artists = albumEdit.artists;
-        let genres = albumEdit.genres;
-        let inner = new Album();
-        let interpol = new Interpolator();
-
-        div.innerHTML = interpol.interpolate(div.innerHTML, album);
-
-        document.getElementById("main").style.display = "none";
-
-        document.getElementById("main").innerHTML = div.innerHTML;
-
-        document.getElementById("artistId").innerHTML = inner.setSelect(album.artistId, artists, "artistId");
-
-        document.getElementById("genreId").innerHTML = inner.setSelect(album.genreId, genres, "genreId");
-
-        if (album.albumId === 0) {
-            document.getElementById("remove").style.display = "none";
-        }
-
-        document.getElementById("main").style.display = "block";
-    }
-
-    combineListAndTemplate(albumList, listHtml) {
-        let list = JSON.parse(albumList);
-
-        let div = document.createElement("div");
-
-        div.innerHTML = listHtml;
-
-        let template = div.getElementsByClassName("container")[0].outerHTML;
-
-        div.getElementsByClassName("container")[0].remove();
-
-        for (let i = 0; i < list.length; i++) {
-
-            let item = list[i];
-
-            let albumDiv = document.createElement("div");
-
-            var interpol = new Interpolator();
-
-            albumDiv.innerHTML = interpol.interpolate(template, item);
-
-            albumDiv.getElementsByClassName("image")[0].src = item.albumArtUrl;
-
-            div.innerHTML += albumDiv.innerHTML;
-        }
-
-        document.getElementById("main").innerHTML = div.innerHTML;
-    }
-
-    setSelect(id, items, idType) {
-
-        var select = document.createElement("select");
-
-        if (id === 0) {
-            select.appendChild(document.createElement("option"));
-        }
-
-        for (var i = 0; i < items.length; i++) {
-
-            var option = document.createElement("option");
-
-            var item = items[i];
-
-            option.value = item[idType];
-            option.text = item.name;
-
-            select.appendChild(option);
-        }
-
-        if (id === 0) {
-            return select.innerHTML;
-        }
-
-        var text = select.innerHTML;
-
-        var replaceText = "<option value='" + id + "'>";
-        var replaceWith = "<option value='" + id + "' selected>";
-
-        return text.replace(replaceText, replaceWith);
-    }
-
-    showPage(template, data) {
-        document.getElementById("main").innerHTML = new Interpolator().interpolate(template, data);
-
-        if (albumId === 0) {
-            document.getElementById("remove").style.display = "none";
-        }
-    }
-
-    save(album) {
-        let interpol = new Interpolator();
-        let data = interpol.docToJson(album, document);
-        let http = new Http();
+        let data = Interpolator.docToJson(album, document);
 
         if (album.albumId) {
-            http.put("/api/Albums/" + album.albumId, data, this.list, "");
+            Http.put("/api/Albums/" + album.albumId, data, Album.list);
         } else {
-            http.post("/api/Albums", data, this.list, "");
+            Http.post("/api/Albums", data, Album.list);
         }
     }
 
-    confirmDelete(albumId) {
-        new Http().delete("/api/Albums/" + albumId, this.list, "");
+    static confirmDelete(albumId) {
+        Http.delete("/api/Albums/" + albumId, Album.list);
     }
 
-    route(element) {
+    static route(element) {
 
-        if (element.id === "listAlbums" || element.id === "Cancel") {
-            this.list();
+        let action = element.id;
+
+        if (action === "listAlbums" || action === "cancel") {
+            Album.list();
         } else {
-            let data = element.dataset;
 
-            var album = {
+            let album = {
                 albumId: 0,
                 title: "",
                 genreId: 0,
@@ -157,18 +76,17 @@ export class Album {
                 albumArtUrl: ""
             };
 
-            album = new Interpolator().dataToClass(album, data);
+            album = Interpolator.dataToClass(album, element.dataset);
 
-            if (element.id === "create" || event.srcElement.classList.contains("edit")) {
-                this.update(album.albumId);
-            } else if (element.id === "remove") {
-                this.remove(album);
-            } else if (element.id === "save") {
-                this.save(album);
-            } else if (element.id === "confirmDelete") {
-                this.confirmDelete(album.albumId);
+            if (action === "create" || element.classList.contains("edit")) {
+                Album.update(album);
+            } else if (action === "remove") {
+                Album.remove(album);
+            } else if (action === "save") {
+                Album.save(album);
+            } else if (action === "confirmDelete") {
+                Album.confirmDelete(album.albumId);
             }
         }
     }
 }
-
