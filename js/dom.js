@@ -65,5 +65,5 @@ export class Dom {
         }
 
         Dom.show("main");
-}
+    }
 }

@@ -58,4 +58,3 @@ export class Interpolator {
         return thing;
     }
 }
-

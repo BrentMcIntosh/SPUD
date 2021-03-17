@@ -18,4 +18,4 @@ document.addEventListener("click", event => {
             Album.route(event.srcElement);
         }
     }
-});
+})

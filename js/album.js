@@ -19,7 +19,7 @@ export class Album {
 
                     let button = Interpolator.interpolate(itemTemplate, item);
 
-                    button = button.replace(`src=""`, `src="` + item.albumArtUrl + `"`);
+                    button = button.replace("/images/image.png", item.albumArtUrl);
 
                     Dom.setMain(button, true);
                 }
