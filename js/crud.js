@@ -6,10 +6,10 @@ import { Interpolator } from "/js/interpolator.js";
 
 export class Crud {
 
-    static list(path) {
-        Http.get("/Views/" + path + "/list.html", listTemplate => {
-            Http.get("api/" + path + "/", artistsJson => {
-                Dom.list(listTemplate, artistsJson);
+    static list(path, images) {
+        Http.get("/Views/" + path + "/list.html", template => {
+            Http.get("api/" + path + "/", json => {
+                Dom.list(template, json, images);
             });
         });
     }
@@ -33,5 +33,32 @@ export class Crud {
 
     static confirmDelete(url, callback, callbackArg) {
         Http.delete(url, callback, callbackArg);
+    }
+
+    static setSelect(id, items, idType) {
+
+        let select = document.createElement("select");
+
+        if (id === 0) {
+            select.appendChild(document.createElement("option"));
+        }
+
+        for (let i = 0; i < items.length; i++) {
+
+            let option = document.createElement("option");
+
+            let item = items[i];
+
+            option.value = item[idType];
+            option.text = item.name;
+
+            select.appendChild(option);
+        }
+
+        let text = select.innerHTML;
+        let replaceText = `<option value="` + id + `">`;
+        let replaceWith = `<option value="` + id + `" selected>`;
+
+        Dom.setHtml(idType, text.replace(replaceText, replaceWith));
     }
 }

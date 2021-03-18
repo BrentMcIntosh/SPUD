@@ -4,11 +4,11 @@ export class Interpolator {
 
     static interpolate(template, data) {
 
-        for (var key in data) {
+        for (let key in data) {
 
-            var reg = new RegExp("{{" + key + "}}", "g");
+            let reg = new RegExp("{{" + key + "}}", "g");
 
-            var value = data[key];
+            let value = data[key];
 
             if (!value) {
                 value = "";
@@ -20,9 +20,21 @@ export class Interpolator {
         return template;
     }
 
+
+    static interpolateImages(template, data, images) {
+
+        template = Interpolator.interpolate(template, data);
+
+        for (let image of images) {
+            template = template.replace("/images/" + image + ".png", data[image]);
+        }
+
+        return template;
+    }
+
     static docToJson(thing, doc) {
 
-        for (var key in thing) {
+        for (let key in thing) {
 
             let element = doc.getElementById(key);
 
@@ -44,11 +56,11 @@ export class Interpolator {
 
     static dataToClass(thing, data) {
 
-        for (var key in thing) {
+        for (let key in thing) {
 
-            var id = key.toLowerCase();
+            let id = key.toLowerCase();
 
-            var value = data[id];
+            let value = data[id];
 
             if (value) {
                 thing[key] = value;

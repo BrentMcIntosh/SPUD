@@ -1,45 +1,39 @@
 ﻿"use strict";
 
 import { Dom } from "/js/dom.js";
+import { Crud } from "/js/crud.js";
 import { Http } from "/js/http.js";
 import { Interpolator } from "/js/interpolator.js";
 
 export class Album {
 
     static list() {
-        Http.get("/Views/Albums/list.html", template => {
-            Http.get("api/Albums/", json => {
+        Crud.list("Albums", ["albumArtUrl"]);
+    }
+
+    static update(album) {
+        Http.get("/Views/Albums/update.html", template => {
+            Http.get("api/Albums/" + album.albumId, json => {
+
+                let albumEdit = JSON.parse(json);
+                let album = albumEdit.album;
+                let artists = albumEdit.artists;
+                let genres = albumEdit.genres;
+
+                template = Interpolator.interpolate(template, album);
 
                 Dom.hide("main");
                 Dom.setMain(template);
 
-                let itemTemplate = Dom.getButtonTemplate();
+                Crud.setSelect(album.artistId, artists, "artistId");
+                Crud.setSelect(album.genreId, genres, "genreId");
 
-                for (let item of JSON.parse(json)) {
-
-                    let button = Interpolator.interpolate(itemTemplate, item);
-
-                    button = button.replace("/images/image.png", item.albumArtUrl);
-
-                    Dom.setMain(button, true);
+                if (!album.albumId) {
+                    Dom.hide("remove");
                 }
 
                 Dom.show("main");
             });
-        });
-    }
-
-    static update(album) {
-        Album.simplePage("update", album);
-    }
-
-    static remove(album) {
-        Album.simplePage("delete", album);
-    }
-
-    static simplePage(page, album) {
-        Http.get("/Views/Albums/" + page + ".html", template => {
-            Dom.page(template, album, !album.albumId);
         });
     }
 
@@ -63,7 +57,7 @@ export class Album {
         let action = element.id;
 
         if (action === "listAlbums" || action === "cancel") {
-            Album.list();
+            Crud.list("Albums", ["albumArtUrl"]);
         } else {
 
             let album = {
@@ -81,7 +75,7 @@ export class Album {
             if (action === "create" || element.classList.contains("edit")) {
                 Album.update(album);
             } else if (action === "remove") {
-                Album.remove(album);
+                Crud.simplePage("/Views/Albums/delete.html", album, album.albumId);
             } else if (action === "save") {
                 Album.save(album);
             } else if (action === "confirmDelete") {

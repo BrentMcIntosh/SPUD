@@ -22,6 +22,10 @@ export class Dom {
         }
     }
 
+    static setHtml(id, html) {
+        document.getElementById(id).innerHTML = html;
+    }
+
     static getButtonTemplate() {
 
         let listButton = document.getElementById("listButton");
@@ -33,14 +37,20 @@ export class Dom {
         return html.replace(`id="listButton" `, "");
     }
     
-    static createListButton(template, data) {
+    static createListButton(template, data, images) {
 
-        let button = Interpolator.interpolate(template, data);
+        let button = "";
+
+        if (images) {
+            button = Interpolator.interpolateImages(template, data, images);
+        } else {
+            button = Interpolator.interpolate(template, data, images);
+        }
 
         Dom.setMain(button, true);
     }
 
-    static list(template, json) {
+    static list(template, json, images) {
 
         Dom.hide("main");
         Dom.setMain(template);
@@ -48,7 +58,7 @@ export class Dom {
         let itemTemplate = Dom.getButtonTemplate();
 
         for (let item of JSON.parse(json)) {
-            Dom.createListButton(itemTemplate, item);
+            Dom.createListButton(itemTemplate, item, images);
         }
 
         Dom.show("main");
