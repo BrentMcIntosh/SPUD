@@ -1,0 +1,136 @@
+﻿
+button, img {
+    cursor: pointer;
+}
+
+td {
+    font-size: 14px;
+    vertical-align: middle;
+    padding: 5px;
+}
+
+.active {
+    border-radius: 25px;
+    background: #FF7900;
+}
+
+body {
+    font-family: Helvetica, "Trebuchet MS", Verdana, sans-serif;
+    display: flex;
+    align-items: stretch;
+    margin: 0;
+}
+
+button {
+    border: none;
+    background: #404040;
+    color: #ffffff !important;
+    padding: 20px;
+    text-transform: uppercase;
+    border-radius: 3px;
+    display: block;
+    transition: all 0.3s ease 0s;
+    margin: 10px;
+    width: 50%;
+    font-size: 20px;
+}
+
+button:hover {
+    color: #404040 !important;
+    font-weight: 700 !important;
+    letter-spacing: 3px;
+    background: none;
+    -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+    -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+    transition: all 0.3s ease 0s;
+    border-radius: 3px;
+}
+
+input, select, textarea {
+    width: 800px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+label {
+    width: 100%;
+    padding: 12px 0px 0px 0px;
+    margin: 0;
+    display: inline-block;
+}
+
+.container {
+    display: inline;
+    position: relative;
+    
+}
+
+.image {
+    border: none;
+    display: inline;
+    height: 256px !important;
+    width: 256px !important;
+    margin: 0;
+    padding: 0;
+    transition: all 0.3s ease 0s;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    margin-top: -120px;
+}
+
+.container:hover .overlay {
+    opacity: 1;
+}
+
+.text {
+    color: #ddd;
+    background-color: #333;
+    font-size: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+nav {
+    width: 280px;
+    min-width: 280px;
+    margin: 10px;
+    padding: 10px;
+}
+
+main {
+    width: 1400px;
+    margin: 10px;
+    padding: 10px;
+}
+
+#create {
+    color: aqua;
+    background-color: blue;
+}
+
+#create:hover {
+    background-color: aqua;
+}
+
