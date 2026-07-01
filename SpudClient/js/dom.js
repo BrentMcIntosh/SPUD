@@ -57,7 +57,15 @@ export class Dom {
 
         let itemTemplate = Dom.getButtonTemplate();
 
-        for (let item of JSON.parse(json)) {
+
+        console.log(json);
+
+        for (let item of json) {
+
+            console.log(item);
+
+           //let wuza = JSON.parse(item);
+
             Dom.createListButton(itemTemplate, item, images);
         }
 

@@ -10,7 +10,7 @@ export class Artist {
         let action = element.id;
 
         if (action === "listArtists" || action === "cancel") {
-            Crud.list("Artist");
+            Crud.list("artist");
         } else {
 
             let artist = Interpolator.dataToClass({ artistId: 0, name: "" }, element.dataset);

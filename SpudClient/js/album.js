@@ -7,12 +7,12 @@ import { Interpolator } from "/js/interpolator.js";
 
 export class Album {
 	
-	static apiUrl = "https://localhost:44321/Album/"
-	static artistUrl = "https://localhost:44321/Artist/"
-	static genreUrl = "https://localhost:44321/Genre/"
+	static apiUrl = "http://localhost:3000/Album/"
+	static artistUrl = "http://localhost:3000/Artist/"
+	static genreUrl = "http://localhost:3000/Genre/"
 
     static list() {
-        Crud.list("Album", ["albumArtUrl"]);
+        Crud.list("album", ["albumArtUrl"]);
     }
 
     static update(album) {

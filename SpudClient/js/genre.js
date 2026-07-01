@@ -10,7 +10,7 @@ export class Genre {
         let action = element.id;
 
         if (action === "listGenres" || action === "cancel") {
-            Crud.list("Genre");
+            Crud.list("genre");
         } else {
 
             let genre = Interpolator.dataToClass({ genreId: 0, name: "", description: "" }, element.dataset);

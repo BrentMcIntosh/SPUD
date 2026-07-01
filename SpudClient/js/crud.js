@@ -6,11 +6,11 @@ import { Interpolator } from "/js/interpolator.js";
 
 export class Crud {
 	
-	static apiUrl = "https://localhost:44321/"
+	static apiUrl = "http://localhost:7102/api/"
 
     static list(path, images) {
         Http.get("/Views/" + path + "/list.html", template => {
-            Http.get(Crud.apiUrl + path + "/", json => {
+            Http.getJson(path, json => {
                 Dom.list(template, json, images);
             });
         });
