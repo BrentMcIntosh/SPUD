@@ -22,9 +22,9 @@ function init() {
         artists.add({ artistId: 2, name: 'Bon Jovi' });
         artists.add({ artistId: 3, name: 'Judas Priest' });
         
-        albums.add({ albumId: 1, name: 'The Black Saint and the Sinner Lady', genreId: 1, artistId: 1, albumArtUrl: 'https://upload.wikimedia.org/wikipedia/en/2/2e/Mingus_Black_Saint.jpg' });
-        albums.add({ albumId: 2, name: 'Slippery When Wet', genreId: 2, artistId: 2, albumArtUrl: 'https://upload.wikimedia.org/wikipedia/en/a/ab/Bon_jovi_slippery_when_wet.jpg' });
-        albums.add({ albumId: 3, name: 'Unleashed in the East', genreId: 2, artistId: 2, albumArtUrl: 'https://upload.wikimedia.org/wikipedia/en/9/92/Jpunleashedintheeast.JPG' });
+        albums.add({ albumId: 1, title: 'The Black Saint and the Sinner Lady', genreId: 1, artistId: 1, albumArtUrl: 'https://upload.wikimedia.org/wikipedia/en/2/2e/Mingus_Black_Saint.jpg' });
+        albums.add({ albumId: 2, title: 'Slippery When Wet', genreId: 2, artistId: 2, albumArtUrl: 'https://upload.wikimedia.org/wikipedia/en/a/ab/Bon_jovi_slippery_when_wet.jpg' });
+        albums.add({ albumId: 3, title: 'Unleashed in the East', genreId: 2, artistId: 2, albumArtUrl: 'https://upload.wikimedia.org/wikipedia/en/9/92/Jpunleashedintheeast.JPG' });
     };
 }
 
