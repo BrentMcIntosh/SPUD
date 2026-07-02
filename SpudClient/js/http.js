@@ -31,26 +31,73 @@ export class Http {
 
 
     static post(url, data, callback, callbackArg) {
-        this.sendData("POST", url, data, callback, callbackArg);
+        const request = indexedDB.open("music");
+
+        url = url.toLowerCase();
+
+        console.log(url);
+
+        request.onsuccess = function (event) {
+            const db = event.target.result;
+            const transaction = db.transaction(url, "readwrite");
+            const store = transaction.objectStore(url);
+            const request = store.openKeyCursor(null, "prev");
+            request.onsuccess = (event) => {
+                const cursor = event.target.result;
+                const maxId = cursor ? cursor.key : 0; 
+
+                let temp = JSON.parse(data);
+
+                if (url === 'genre') {
+                    temp.genreId = maxId + 1;
+                }
+                else if (url === 'artist') {
+                    temp.artistId = maxId + 1;
+                }
+                else if (url === 'album') {
+                    temp.albumId = maxId + 1;
+                }
+
+                store.add(temp);
+            };
+        };
+    }
+
+    static create() {
+	  const request = indexedDB.open("music");
+
+	  request.onsuccess = function (event) {
+			const db = event.target.result;
+			const transaction = db.transaction("genre", "readwrite");
+			const genres = transaction.objectStore("genre");
+			
+			genres.add({ genreId: 4, name: 'Emo', description: 'Sucks' });
+	  };
     }
 
 
 
-    static read(id) {
+    static getJsonSingle(storeName, id, callback) {
         const request = indexedDB.open("music");
 
         request.onsuccess = function (event) {
             const db = event.target.result;
-            const transaction = db.transaction("genre", "readonly");
-            const genres = transaction.objectStore("genre");
+            const transaction = db.transaction(storeName, "readonly");
+            const store = transaction.objectStore(storeName);
 
-            const getRequest = genres.get(id);
+            console.log("the id is " + id);
+
+            const getRequest = store.get(id);
 
             getRequest.onsuccess = function () {
                 if (getRequest.result) {
-                    console.log("Genre found:", getRequest.result);
+                    console.log("album found:", getRequest.result);
+                    callback(getRequest.result);
                 } else {
-                    console.log("Genre not found");
+                    console.log("Album not found");
+
+                    callback({ albumId: 0, title: '', genreId: 0, artistId: 0, albumArtUrl: '' });
+
                 }
             };
 

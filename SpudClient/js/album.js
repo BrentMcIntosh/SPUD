@@ -17,13 +17,13 @@ export class Album {
 
     static update(album) {
         Http.get("/Views/Album/update.html", template => {
-            Http.get(Album.apiUrl + album.albumId, json => {
-				Http.get(Album.artistUrl, artistJson => {
-					Http.get(Album.genreUrl, genreJson => {
+            Http.getJsonSingle("album", album.albumId, json => {
+				Http.getJson('artist', artistJson => {
+					Http.getJson('genre', genreJson => {
 
-						let album = JSON.parse(json);
-						let artists = JSON.parse(artistJson);
-						let genres = JSON.parse(genreJson);
+						let album = json;
+						let artists = artistJson;
+						let genres = genreJson;
 
 						template = Interpolator.interpolate(template, album);
 
@@ -49,9 +49,9 @@ export class Album {
         let data = Interpolator.docToJson(album, document);
 
         if (album.albumId) {
-            Http.put(Album.apiUrl + album.albumId, data, Album.list);
+            Http.put('album', data, Album.list);
         } else {
-            Http.post(Album.apiUrl, data, Album.list);
+            Http.post('album', data, Album.list);
         }
     }
 

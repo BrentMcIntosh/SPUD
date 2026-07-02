@@ -27,9 +27,9 @@ export class Crud {
         let data = Interpolator.docToJson(item, document);
 
         if (id) {
-            Http.put(Crud.apiUrl + path + "/" + id, data, Crud.list, path);
+            Http.put(path, id, data, Crud.list);
         } else {
-            Http.post(Crud.apiUrl + path, data, Crud.list, path);
+            Http.post(path, data, Crud.list);
         }
     }
 
