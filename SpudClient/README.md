@@ -2,6 +2,12 @@
 **Single** **Page** Application   
 Create Read **Update** **Delete**
 
+To run install Node.js and in the SpudClient directory run 
+
+```
+node server.js
+```
+
 1. The application must only use one page. 
 2. No libraries on the front-end.     
 3. The latest HTML, CSS, and JavaScript that Chrome handles are fine and encouraged.  
