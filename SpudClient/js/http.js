@@ -78,6 +78,11 @@ export class Http {
 
 
     static getJsonSingle(storeName, id, callback) {
+
+        if (id === 0) {
+            return callback({ albumId: 0, title: '', genreId: 0, artistId: 0, albumArtUrl: '' });
+        }
+
         const request = indexedDB.open("music");
 
         request.onsuccess = function (event) {
@@ -87,22 +92,19 @@ export class Http {
 
             console.log("the id is " + id);
 
-            const getRequest = store.get(id);
+            const getRequest = store.get(parseInt(id));
 
             getRequest.onsuccess = function () {
+
                 if (getRequest.result) {
-                    console.log("album found:", getRequest.result);
                     callback(getRequest.result);
                 } else {
                     console.log("Album not found");
-
-                    callback({ albumId: 0, title: '', genreId: 0, artistId: 0, albumArtUrl: '' });
-
                 }
             };
 
             getRequest.onerror = function (event) {
-            console.error("Error retrieving genre:", event.target.errorCode);
+                console.error("Error retrieving genre:", event.target.errorCode);
             };
         };
     }
