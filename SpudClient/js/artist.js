@@ -23,9 +23,11 @@ export class Artist {
             } 
 			else if (action === "save") {
                 Crud.save("Artist", artist, artist.artistId);
+                Crud.list("artist");
             } 
 			else if (action === "confirmDelete") {
-                Crud.confirmDelete("Artist/" + artist.artistId, Crud.list, "Artist");
+                Crud.confirmDelete("artist", artist.artistId);
+                Crud.list("artist");
             }
         }
     }

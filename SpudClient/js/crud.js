@@ -33,8 +33,8 @@ export class Crud {
         }
     }
 
-    static confirmDelete(url, callback, callbackArg) {
-        Http.delete(Crud.apiUrl + url, callback, callbackArg);
+    static confirmDelete(storeName, id) {
+        Http.delete(storeName, parseInt(id));
     }
 
     static setSelect(id, items, idType) {

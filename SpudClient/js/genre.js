@@ -23,9 +23,11 @@ export class Genre {
             } 
 			else if (action === "save") {
                 Crud.save("Genre", genre, genre.genreId);
+                Crud.list("genre");
             } 
 			else if (action === "confirmDelete") {
-                Crud.confirmDelete("Genre/" + genre.genreId, Crud.list, "Genre");
+                Crud.confirmDelete("genre", genre.genreId);
+                Crud.list("genre");
             }
         }
     }

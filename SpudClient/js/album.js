@@ -49,14 +49,17 @@ export class Album {
         let data = Interpolator.docToJson(album, document);
 
         if (album.albumId) {
-            Http.put('album', data, Album.list);
+            Http.put('album', album.id, data, Album.list);
         } else {
             Http.post('album', data, Album.list);
         }
+
+        Crud.list("album", ["albumArtUrl"]);
     }
 
     static confirmDelete(albumId) {
-        Http.delete(Album.apiUrl + albumId, Album.list);
+        Http.delete('album', parseInt(albumId));
+
     }
 
     static route(element) {
@@ -90,6 +93,7 @@ export class Album {
             } 
 			else if (action === "confirmDelete") {
                 Album.confirmDelete(album.albumId);
+                Crud.list("Album", ["albumArtUrl"]);
             }
         }
     }

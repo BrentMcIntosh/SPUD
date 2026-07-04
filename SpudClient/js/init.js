@@ -1,9 +1,9 @@
 
 function init() {
 
-    const request = indexedDB.open("music");
+    const request = indexedDB.open("music", 2);
 
-    request.onerror = (event) => {
+    request.onerror = (event) => {s
         // Handle errors.
     };
 

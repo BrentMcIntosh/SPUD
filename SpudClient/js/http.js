@@ -3,30 +3,30 @@
 export class Http {
 
 
-    static seed() {
+    // static seed() {
 
-    }
+    // }
 
 
-    static openDB() {
-        const DBOpenRequest = window.indexedDB.open("toDoList");
-        DBOpenRequest.onsuccess = (e) => {
-            let db = DBOpenRequest.result;
-        };
-    }
+    // static openDB() {
+    //     const DBOpenRequest = window.indexedDB.open("toDoList");
+    //     DBOpenRequest.onsuccess = (e) => {
+    //         let db = DBOpenRequest.result;
+    //     };
+    // }
 
-    async addRow(newRow) {
-        // 1. Read existing data, default to empty array if none exists
-        const result = await chrome.storage.local.get({ my_table_data: [] });
-        const tableData = result.my_table_data;
+    // async addRow(newRow) {
+    //     // 1. Read existing data, default to empty array if none exists
+    //     const result = await chrome.storage.local.get({ my_table_data: [] });
+    //     const tableData = result.my_table_data;
 
-        // 2. Add the new row
-        tableData.push(newRow);
+    //     // 2. Add the new row
+    //     tableData.push(newRow);
 
-        // 3. Update the storage
-        await chrome.storage.local.set({ my_table_data: tableData });
-        console.log("Row added successfully!");
-    }
+    //     // 3. Update the storage
+    //     await chrome.storage.local.set({ my_table_data: tableData });
+    //     console.log("Row added successfully!");
+    // }
 
 
 
@@ -63,24 +63,24 @@ export class Http {
         };
     }
 
-    static create() {
-	  const request = indexedDB.open("music");
+    // static create() {
+	//   const request = indexedDB.open("music");
 
-	  request.onsuccess = function (event) {
-			const db = event.target.result;
-			const transaction = db.transaction("genre", "readwrite");
-			const genres = transaction.objectStore("genre");
+	//   request.onsuccess = function (event) {
+	// 		const db = event.target.result;
+	// 		const transaction = db.transaction("genre", "readwrite");
+	// 		const genres = transaction.objectStore("genre");
 			
-			genres.add({ genreId: 4, name: 'Emo', description: 'Sucks' });
-	  };
-    }
+	// 		genres.add({ genreId: 4, name: 'Emo', description: 'Sucks' });
+	//   };
+    // }
 
 
 
     static getJsonSingle(storeName, id, callback) {
 
         if (id === 0) {
-            return callback({ albumId: 0, title: '', genreId: 0, artistId: 0, albumArtUrl: '' });
+            return callback({ albumId: 0, title: '', genreId: 0, artistId: 0, albumArtUrl: '', price: '' });
         }
 
         const request = indexedDB.open("music");
@@ -132,8 +132,6 @@ export class Http {
 
 
     static get(url, callback, callbackArg) {
-
-
         let request = new XMLHttpRequest();
 
         request.onreadystatechange = function () {
@@ -144,48 +142,64 @@ export class Http {
 
         request.open("GET", url, true);
         request.send();
-
     }
 
     static getJson(url, callback, callbackArg) {
-
-        url = url.toLowerCase();
-
-        this.readAll(url, callback, callbackArg);
-
+        this.readAll(url.toLowerCase(), callback, callbackArg);
     }
 
-    static put(url, data, callback, callbackArg) {
-        this.sendData("PUT", url, data, callback, callbackArg)
-    }
+    static convert(record) {
+        let obj = JSON.parse(record);
 
-    static delete(url, callback, callbackArg) {
-        let request = new XMLHttpRequest();
-
-        request.onreadystatechange = function () {
-            if (this.readyState == 4) {
-                callback(callbackArg);
+        Object.entries(obj).forEach(([key, value]) => {
+            if (typeof value === 'string' && /^\d+(\.\d+)?$/.test(value)) {
+                obj[key] = value.includes('.') ? obj[key] = parseFloat(value) : obj[key] = parseInt(value, 10);
             }
-        };
+        });
 
-        request.open("DELETE", url, true);
-        request.send();
+        return obj;
     }
 
-    static sendData(method, url, data, callback, callbackArg) {
+    static put(storeName, id, record, callback) {
+        storeName = storeName.toLowerCase();
 
-        let xhttp = new XMLHttpRequest();
+        let item = this.convert(record);
+        const request = indexedDB.open("music");
 
-        xhttp.onreadystatechange = function () {
-
-            if (this.readyState == 4) {
-
-                callback(callbackArg);
-            }
-        };
-
-        xhttp.open(method, url, true);
-        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhttp.send(data);
+        request.onsuccess = function (event) {
+            const db = event.target.result;
+            const transaction = db.transaction(storeName, "readwrite");
+            const store = transaction.objectStore(storeName);
+            store.put(item);
+        };        
     }
+
+    static delete(storeName, id) {
+        storeName = storeName.toLowerCase();
+        const request = indexedDB.open("music");
+
+        request.onsuccess = function (event) {
+            const db = event.target.result;
+            const transaction = db.transaction(storeName, "readwrite");
+            const store = transaction.objectStore(storeName);
+            store.delete(id);
+        };      
+    }
+
+    // static sendData(method, url, data, callback, callbackArg) {
+
+    //     let xhttp = new XMLHttpRequest();
+
+    //     xhttp.onreadystatechange = function () {
+
+    //         if (this.readyState == 4) {
+
+    //             callback(callbackArg);
+    //         }
+    //     };
+
+    //     xhttp.open(method, url, true);
+    //     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    //     xhttp.send(data);
+    // }
 }
