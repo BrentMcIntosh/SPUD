@@ -2,34 +2,6 @@
 
 export class Http {
 
-
-    // static seed() {
-
-    // }
-
-
-    // static openDB() {
-    //     const DBOpenRequest = window.indexedDB.open("toDoList");
-    //     DBOpenRequest.onsuccess = (e) => {
-    //         let db = DBOpenRequest.result;
-    //     };
-    // }
-
-    // async addRow(newRow) {
-    //     // 1. Read existing data, default to empty array if none exists
-    //     const result = await chrome.storage.local.get({ my_table_data: [] });
-    //     const tableData = result.my_table_data;
-
-    //     // 2. Add the new row
-    //     tableData.push(newRow);
-
-    //     // 3. Update the storage
-    //     await chrome.storage.local.set({ my_table_data: tableData });
-    //     console.log("Row added successfully!");
-    // }
-
-
-
     static post(url, data, callback, callbackArg) {
         const request = indexedDB.open("music");
 
@@ -62,20 +34,6 @@ export class Http {
             };
         };
     }
-
-    // static create() {
-	//   const request = indexedDB.open("music");
-
-	//   request.onsuccess = function (event) {
-	// 		const db = event.target.result;
-	// 		const transaction = db.transaction("genre", "readwrite");
-	// 		const genres = transaction.objectStore("genre");
-			
-	// 		genres.add({ genreId: 4, name: 'Emo', description: 'Sucks' });
-	//   };
-    // }
-
-
 
     static getJsonSingle(storeName, id, callback) {
 
@@ -186,20 +144,4 @@ export class Http {
         };      
     }
 
-    // static sendData(method, url, data, callback, callbackArg) {
-
-    //     let xhttp = new XMLHttpRequest();
-
-    //     xhttp.onreadystatechange = function () {
-
-    //         if (this.readyState == 4) {
-
-    //             callback(callbackArg);
-    //         }
-    //     };
-
-    //     xhttp.open(method, url, true);
-    //     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    //     xhttp.send(data);
-    // }
 }

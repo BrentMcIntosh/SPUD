@@ -6,7 +6,7 @@ import { Interpolator } from "/js/interpolator.js";
 
 export class Crud {
 	
-	static apiUrl = "http://localhost:7102/api/"
+	// static apiUrl = "http://localhost:7102/api/"
 
     static list(path, images) {
         Http.get("/Views/" + path + "/list.html", template => {

@@ -3,8 +3,8 @@ function init() {
 
     const request = indexedDB.open("music", 2);
 
-    request.onerror = (event) => {s
-        // Handle errors.
+    request.onerror = (event) => {
+        console.log(event);
     };
 
     request.onupgradeneeded = (event) => {
